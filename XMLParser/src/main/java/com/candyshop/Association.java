@@ -47,7 +47,7 @@ public class Association {
 	}
 	@Override
 	public String toString() {
-		return "Association [id=" + id + ", leftEntity=" + leftEntity + ", leftCardinality=" + leftCardinality
+		return "Association [leftEntity=" + leftEntity + ", leftCardinality=" + leftCardinality
 				+ ", rightEntity=" + rightEntity + ", rightCardinality=" + rightCardinality + ", mappedBy=" + mappedBy
 				+ "]";
 	}

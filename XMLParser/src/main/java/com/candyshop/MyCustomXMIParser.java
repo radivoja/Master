@@ -51,7 +51,11 @@ public class MyCustomXMIParser extends DefaultHandler{
 					if(associations.get(i).getId().equals(associations.get(j).getId())) {
 						associations.get(i).setRightCardinality(associations.get(j).getLeftCardinality());
 						associations.get(j).setRightCardinality(associations.get(i).getLeftCardinality());
+						
+						if(associations.get(j).getLeftCardinality().equals("Many") && associations.get(j).getRightCardinality().equals("One"))
+							continue;						
 						associations.get(j).setMappedBy("map");
+					
 					}
 				}
 			}

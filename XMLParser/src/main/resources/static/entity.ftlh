@@ -1,8 +1,19 @@
-package com.example;
+package com.project.entities;
 import java.util.List;
 import java.util.Date;
 import jakarta.persistence.*;
 import jakarta.annotation.Nonnull;
+
+
+<#function checkType association>
+	<#if association.rightCardinality == "rightCardinality" || association == "EBoolean">
+  	<#return testSting?substring(1)>
+  	<#else>
+  	<#return association>
+  	</#if>
+</#function>
+
+
 
 @Entity
 public class ${model.className} {
@@ -11,17 +22,14 @@ public class ${model.className} {
 	<#if property.stereotype == "Id">
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	<#elseif property.stereotype == "Unique"> 
-	@Nonnull<#if property.length?has_content>(length = "${property.length}") </#if>
-	<#else>
-	<#if property.length?has_content>@Column(length = "${property.length}") </#if>
 	</#if>
 	</#if>
+	<#if property.length?has_content>@Column(length = "${property.length}") </#if>	
 	private ${property.type?no_esc} ${property.name?replace(" ", "")};
 	</#list>
 <#list model.associations as association>
 	@${association.leftCardinality}To${association.rightCardinality}<#if association.mappedBy?exists>(mappedBy="${model.className?lower_case}")</#if>
-	<#if association.leftCardinality == 'Many'>
+	<#if association.rightCardinality == 'Many'>
 	private List<${association.rightEntity?cap_first}> ${association.rightEntity};
 	<#else>
 	private ${association.rightEntity?cap_first} ${association.rightEntity};	
