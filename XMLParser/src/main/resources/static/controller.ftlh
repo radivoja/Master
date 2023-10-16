@@ -40,7 +40,7 @@ public class AppController {
 	}
 	// 2.
 	@GetMapping("/${name}Edit/{id}")
-	public String ${name}Edit(Model model, @PathVariable long id) {
+	public String ${name}Edit(Model model, @PathVariable ${item.key.type} id) {
 		${name?cap_first} ${name} = ${name}Repository.findById(id).get();
 		model.addAttribute("${name}", ${name});
 		return "${name}Form";

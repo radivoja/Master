@@ -30,6 +30,14 @@ td:nth-child(even) {
 <#list model.properties as property>
 				<th> ${property.name} </th>
 </#list>
+
+
+<#list model.associations as association>
+<#if association.leftCardinality == 'One'>
+				<th> ${association.rightEntity?cap_first}</th>
+</#if>				
+</#list>
+
 				<th> Edit </th>
 			</tr>
 		</thead>
