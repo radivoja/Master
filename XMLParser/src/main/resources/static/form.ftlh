@@ -1,18 +1,19 @@
-<#assign formActionParam = "@" + "{"+ "/"+ "${model.className?lower_case}Post" + "}">
-<#assign formModelName = "$" + "{"+ "${model.className}" + "}">
+<#assign formActionParam = "@" + "{"+ "/"+ "${model.name?lower_case}Post" + "}">
+<#assign formModelName = "$" + "{"+ "${model.name}" + "}">
 
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<h1 style="text-align: center;">${model.className}</h1>
-		<title style="text-align: center;">${model.className}</title>
+		<h1 style="text-align: center;">${model.name}</h1>
+		<title style="text-align: center;">${model.name}</title>
 	</head>
 	<body style="background-color:aquamarine;">
 		<form th:action="${formActionParam}" th:object="${formModelName?lower_case}" method="POST">
 <#list model.properties as property>
-			<div>
+			<div>			
 			<label>${property.name?cap_first}:</label>
 			<input type="text" th:field="*{${property.name}}"/>
 			</div>
+
 </#list>
         	<button type="submit">Create</button>
 		</form> 

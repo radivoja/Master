@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 <#list list as item>
-import com.project.repositories.${item.className}Repository;
-import com.project.entities.${item.className};
+import com.project.repositories.${item.name}Repository;
+import com.project.entities.${item.name};
 </#list>
 
 @Controller
@@ -21,32 +21,35 @@ public class AppController {
 
 <#list list as item>
 	@Autowired
-	private ${item.className}Repository ${item.className?lower_case}Repository;
+	private ${item.name}Repository ${item.name?lower_case}Repository;
 </#list>
 
 <#list list as item>
-<#assign name = item.className?lower_case>
+<#assign name = item.name?lower_case>
+
+
+	// 1. Get
 	@GetMapping("/${name}List")
 	public String get${name?cap_first}List(Model model) {
 		model.addAttribute("${name}List", ${name}Repository.findAll());
 		return "${name}List";
 	}
 
-	// 1.
+	// 2. Form
 	@GetMapping("/${name}Form")
 	public String ${name?cap_first}Form(Model model) {
 		model.addAttribute("${name}", new ${name?cap_first}());
 	    return "${name}Form";
 	}
-	// 2.
+	// 3. Edit
 	@GetMapping("/${name}Edit/{id}")
-	public String ${name}Edit(Model model, @PathVariable ${item.key.type} id) {
-		${name?cap_first} ${name} = ${name}Repository.findById(id).get();
+	public String ${name}Edit(Model model, @PathVariable Integer id) {
+		${item.name} ${name} = ${name}Repository.findById(id).get();
 		model.addAttribute("${name}", ${name});
 		return "${name}Form";
 	}
 	
-	// 3.
+	// 4. Post
 	@PostMapping("/${name}Post")
 	public String ${name}Post(@ModelAttribute("${name}") ${name?cap_first} ${name}) {
 		${name}Repository.save(${name});

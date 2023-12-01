@@ -15,15 +15,15 @@ td:nth-child(even) {
   background-color: #dddddd;
 }
 </style>
-<#assign listSting = "$" + "{"+ "${model.className?lower_case}List" + "}">
-<#assign editPar = "$" + "{"+ "${model.className?lower_case}" + ".id"+"})}">
+<#assign listSting = "$" + "{"+ "${model.name?lower_case}List" + "}">
+<#assign editPar = "$" + "{"+ "${model.name?lower_case}" + ".id"+"})}">
 
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title> ${model.className}</title>
+		<title> ${model.name}</title>
 	</head>	
 	<body>
-	<a th:href="@{${model.className?lower_case}Form}"> ${model.className} </a> </div>
+	<a th:href="@{${model.name?lower_case}Form}"> ${model.name} </a> </div>
 	<table border='1'>
 		<thead>
 			<tr>
@@ -32,22 +32,16 @@ td:nth-child(even) {
 </#list>
 
 
-<#list model.associations as association>
-<#if association.leftCardinality == 'One'>
-				<th> ${association.rightEntity?cap_first}</th>
-</#if>				
-</#list>
-
 				<th> Edit </th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr th:each="${model.className?lower_case} : ${listSting}">
+			<tr th:each="${model.name?lower_case} : ${listSting}">
 <#list model.properties as property>
-<#assign name = "$" + "{"+ "${model.className?lower_case}.${property.name}" + "}">
+<#assign name = "$" + "{"+ "${model.name?lower_case}.${property.name}" + "}">
 				<td th:text="${name?replace(" ", "")}"></td>
 </#list>
-				<td><a th:href="@{/${model.className?lower_case}Edit/{id}(id=${editPar}">Edit</a></td>
+				<td><a th:href="@{/${model.name?lower_case}Edit/{id}(id=${editPar}">Edit</a></td>
 			<tr>
 		</tbody>
 	</table>
