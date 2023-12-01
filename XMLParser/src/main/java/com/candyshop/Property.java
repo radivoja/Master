@@ -1,54 +1,67 @@
 package com.candyshop;
 
 public class Property {
-	private String name;
-	private String stereotype;
-	private String id;
-	private String type;
-	private String cardinality;
-	private String length;
-	
-	public String getName() {
-		return name;
+    private String id;
+    private String name;
+    private String type;
+    private String association;
+    private String lowerValue;
+    private String upperValue;
+    private String relationship;
+	private String mappedBy;
+    
+    public String getMappedBy() {
+		return mappedBy;
 	}
-	public String getType() {
-		return type;
+	public void setMappedBy(String mappedBy) {
+		this.mappedBy = mappedBy;
 	}
-	public void setType(String type) {
-		this.type = type;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public String getStereotype() {
-		return stereotype;
-	}
-	public void setStereotype(String stereotype) {
-		this.stereotype = stereotype;
-	}
-	public String getId() {
-		return id;
-	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getCardinality() {
-		return cardinality;
-	}
-	public void setCardinality(String cardinality) {
-		this.cardinality = cardinality;
-	}
-
-	public String getLength() {
-		return length;
-	}
-	public void setLength(String length) {
-		this.length = length;
-	}
-	@Override
-	public String toString() {
-		return "Property [name=" + name + ", stereotype=" + stereotype + ", id=" + id + ", type=" + type
-				+ ", cardinality=" + cardinality + ", length=" + length + "]";
-	}
+	public String getRelationship() {
+        return relationship;
+    }
+    public void setRelationship(String relationship) {
+        this.relationship = relationship;
+    }
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
+    public String getAssociation() {
+        return association;
+    }
+    public void setAssociation(String association) {
+        this.association = association;
+    }
+    public String getLowerValue() {
+        return lowerValue;
+    }
+    public void setLowerValue(String lowerValue) {
+        this.lowerValue = lowerValue;
+    }
+    public String getUpperValue() {
+        return upperValue;
+    }
+    public void setUpperValue(String upperValue) {
+        this.upperValue = upperValue;
+    }
+    @Override
+    public String toString() {
+        return "Property [id=" + id + ", name=" + name + ", type=" + type + ", association=" + association
+                + ", lowerValue=" + lowerValue + ", upperValue=" + upperValue + ", relationship=" + relationship + "]";
+    }    
 	
 }

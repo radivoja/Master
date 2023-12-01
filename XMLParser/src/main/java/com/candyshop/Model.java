@@ -4,33 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Model {
-	
-	private String className;
-	private List<Property> properties = new ArrayList<>();
-	private List<Association> associations = new ArrayList<>();
-	
-	public List<Property> getProperties() {
-		return properties;
-	}
-	public void setProperties(List<Property> properties) {
-		this.properties = properties;
-	}
-	public String getClassName() {
-		return className;
-	}
-	public void setClassName(String className) {
-		this.className = className;
-	}
-	
-	public List<Association> getAssociations() {
-		return associations;
-	}
-	public void setAssociations(List<Association> associations) {
-		this.associations = associations;
-	}
-	@Override
-	public String toString() {
-		return "Model [className=" + className  + ", properties=" + properties + "]";
-	}
-
+    private String id;
+    private String name;
+    private List<Property> properties = new ArrayList<>();
+    public String getId() {
+        return id;
+    }
+    public void setId(String id) {
+        this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public List<Property> getProperties() {
+        return properties;
+    }
+    public void setProperties(List<Property> properties) {
+        this.properties = properties;
+    }
+    @Override
+    public String toString() {
+        return "Model [id=" + id + ", name=" + name + ", properties=" + properties + "]";
+    }
 }

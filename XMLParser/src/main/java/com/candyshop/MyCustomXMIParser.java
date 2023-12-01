@@ -1,150 +1,161 @@
 package com.candyshop;
 
-import java.util.ArrayList;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.project.model.Model;
+import com.project.model.Property;
+
 public class MyCustomXMIParser extends DefaultHandler{
 
-	List<Model> models = new ArrayList<>();
-	List<Association> associations = new ArrayList<>();
-	Map<String, Stereotype> stereotypes = new HashMap<>();
-	Model model = null;
-	Association association = null;
-	Property property = null;
-	Stereotype stereotype = null;
-	
-	@Override
-	public void startDocument() throws SAXException {
-	}
+	public Map<String, Model> models = new HashMap<String, Model>();
+    public Model model = null;
+    Property property = null;
 
-	@Override
-	public void endDocument() throws SAXException {
-		sortAssociations();
-		
-		for(Model model : models) {
-			for(Association association : associations) {
-				if(model.getClassName().toLowerCase().equals(association.getLeftEntity()))
-					model.getAssociations().add(association);
-			}
+    @Override
+    public void startDocument() throws SAXException {
+        super.startDocument();
+    }
 
-			for(int i = 0; i < model.getProperties().size(); i++) {
-				String id = model.getProperties().get(i).getId();
-				Stereotype stereo = stereotypes.get(id);
-				if(stereo != null) {
-					model.getProperties().get(i).setStereotype(stereo.getName());
-					model.getProperties().get(i).setLength(stereo.getLength());
-				}
-			}
-		}
-	}
+    @Override
+    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
 
-	public void sortAssociations() {
-		for(int i = 0; i < associations.size()-1; ++i) {
-			for(int j = i+1; j < associations.size(); ++j) {
-				if(associations.get(i).getRightCardinality() == null) {
-					if(associations.get(i).getId().equals(associations.get(j).getId())) {
-						associations.get(i).setRightCardinality(associations.get(j).getLeftCardinality());
-						associations.get(j).setRightCardinality(associations.get(i).getLeftCardinality());
-						
-						if(associations.get(j).getLeftCardinality().equals("Many") && associations.get(j).getRightCardinality().equals("One"))
-							continue;						
-						associations.get(j).setMappedBy("map");
-					
-					}
-				}
-			}
-		}
-		var count = 1;
-		for(Association association : associations) {
-			System.out.println(count++ + "." +association);
-		}
-	}
+        // Initialize the model object
+        if (qName.equals("packagedElement") && attributes.getValue("xmi:type").equals("uml:Class")) {
+            model = new Model();
+            String id = attributes.getValue("xmi:id");
+            String name = attributes.getValue("name");
+            model.setId(id);
+            model.setName(name);
 
-	@Override
-	public void startElement(String uri, String localName, String qualifiedName, Attributes attributes) throws SAXException {
+            models.put(id, model);
+        }
 
-		if(qualifiedName.equals("packagedElement") && attributes.getValue("xmi:type").equals("uml:Class")) {	
-			model = new Model();
-			model.setClassName(attributes.getValue("name"));
-			models.add(model);
-		}	
-		if(qualifiedName.equals("ownedAttribute")) { 
-			property = new Property();
-			property.setId(attributes.getValue("xmi:id"));
-			property.setName(attributes.getValue("name"));
+        // Initialize the properties
+        if (qName.equals("ownedAttribute") && attributes.getValue("xmi:type").equals("uml:Property")) {
+            property = new Property();
+            model.getProperties().add(property);
+            String id = attributes.getValue("xmi:id");
+            String name = attributes.getValue("name");
+            property.setId(id);
+            property.setName(name);
 
-			if(attributes.getValue("association") != null) {
-				association = new Association();
-				association.setId(attributes.getValue("association"));
-				association.setLeftEntity(model.getClassName().toLowerCase());
-				association.setLeftCardinality("One");
-				association.setRightEntity(attributes.getValue("name"));
-				associations.add(association);
-			}
-			else {
-				model.getProperties().add(property);
-			}
-		}
+            String association = attributes.getValue("association");
+            if (association != null) {
+                property.setAssociation(association);
+                property.setType(attributes.getValue("type"));
+            }
+        }
 
-		if(qualifiedName.equals("upperValue") ) { 
-			association.setLeftCardinality("Many");
-		}
+        if (qName.equals("upperValue")) {
+            property.setUpperValue(attributes.getValue("value"));
+        }
 
-		if(qualifiedName.equals("type")) {
-			if(attributes.getValue("href").endsWith("String")) {
-				property.setType("String");
-			}
-			if(attributes.getValue("href").endsWith("Integer")) {
-				property.setType("Integer");
-			}
-			if(attributes.getValue("href").endsWith("ELong")) {
-				property.setType("Long");
-			}
-			if(attributes.getValue("href").endsWith("EDate")) {
-				property.setType("Date");
-			}	
-			if(attributes.getValue("href").endsWith("EDouble")) {
-				property.setType("Double");
-			}
-		}
+        if (qName.equals("lowerValue")) {
+            property.setLowerValue(attributes.getValue("value"));
+        }
 
-		if(qualifiedName.startsWith("MyMetaModel:")){
-			stereotype = new Stereotype();
-			stereotype.setLength(attributes.getValue("length"));
-			stereotype.setName(stereotypeName(qualifiedName));
-			stereotypes.put(attributes.getValue("base_Property"), stereotype);
-		}
-	}
-	
-	public String propertyType(String name) {
-		switch(name) {
-			case "ELong" :
-				return "Long";
-			case "EDate" :
-				return "Date";
-			case "EDouble" :
-				return "String";
-		}
-		return name;
-	}
-		
-	public String stereotypeName(String name) {
-		switch(name){
-			case "MyMetaModel:Key":
-				return "Id";
-			case "MyMetaModel:Unique":
-			    return "Unique";
-			case "MyMetaModel:Common":
-			    return "Column";
-		}
-		return "";
-	}
+        // Property type
+        if (qName.equals("type")) {
+            property.setType(getType(attributes));
+        }
+    }
+
+    @Override
+    public void endDocument() throws SAXException {
+        for (Model model : models.values()) {
+            for (Property property : model.getProperties()) {
+                if (property.getAssociation() != null) {
+                    Model relatedModel = models.get(property.getType());
+                    Property relatedProperty = getRelatedProperty(relatedModel, property.getAssociation());
+                    // Set Property type field to match relationship type
+                    property.setType(relatedModel.getName());
+                    relatedProperty.setType(model.getName());      
+                    if (property.getUpperValue() == null && relatedProperty.getUpperValue() == null) {
+                        property.setRelationship("OneToOne");
+                        relatedProperty.setRelationship("OneToOne");
+                    } else if (property.getUpperValue() != null && relatedProperty.getUpperValue() != null) {
+                        property.setRelationship("ManyToMany");
+                        relatedProperty.setMappedBy(relatedProperty.getName());
+                        relatedProperty.setRelationship("ManyToMany");
+                    } else {                   
+                        if (property.getUpperValue() != null) {
+                            //Change property type field as List
+                            property.setType("List<" + relatedModel.getName() + ">");
+                            property.setRelationship("OneToMany");
+							property.setMappedBy(model.getName());
+                            relatedProperty.setRelationship("ManyToOne");
+                        }
+                        else{
+                            relatedProperty.setType("List<" + model.getName() + ">");
+                            property.setRelationship("ManyToOne");
+                            relatedProperty.setRelationship("OneToMany");
+                            relatedProperty.setMappedBy(relatedModel.getName());
+                        }
+                    }
+                    // Set Property association fields to null to prevent addiotional checking 
+                    // since we resolve cardinality for both sides in single iteration 
+                    property.setAssociation(null);
+                    relatedProperty.setAssociation(null);
+                }
+            }
+        }
+        try {
+            printInfo();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Property getRelatedProperty(Model model, String association) {  
+        Property property = model.getProperties().stream()
+                .filter(prop -> prop.getAssociation() != null)
+                .filter(prop -> prop.getAssociation().equals(association))
+                .findFirst()
+                .orElse(null);
+        return property;
+    }
+
+    private void printInfo() throws IOException {
+        String fileName = "C:\\Users\\User\\Desktop\\test.txt";
+        PrintWriter out = new PrintWriter(new FileWriter(fileName));
+
+        for (Model model : models.values()) {
+            out.println(model.getName() + " " + model.getId());
+            for (Property property : model.getProperties()) {
+                out.println(property);
+            }
+        }
+        out.close();
+    }
+
+    private String getType(Attributes attributes) {
+        String type = attributes.getValue("href");
+        if (type.endsWith("String")) {
+            return "String";
+        }
+        if (type.endsWith("Integer")) {
+            return "Integer";
+        }
+        if (type.endsWith("ELong")) {
+            return "Long";
+        }
+        if (type.endsWith("EDate")) {
+            return "Date";
+        }
+        if (type.endsWith("EDouble") || type.endsWith("Double")) {
+            return "Double";
+        }
+        
+        return type;
+    }
 
 	@Override
 	public void endElement(String uri, String localName, String qualifiedName) throws SAXException {

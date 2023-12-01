@@ -13,20 +13,21 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.SAXException;
 
+import com.project.model.Model;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 public class XMLParser {
 	
-	
-	static String FILE_DIRECTORY = "C:\\Users\\FTN\\Desktop\\Generated\\";
-	
-	public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, TemplateException {
-		SAXParserFactory factory = SAXParserFactory.newInstance();
+
+
+    public static void generate(String path, String destination) throws SAXException, IOException, ParserConfigurationException, TemplateException{
+        SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         MyCustomXMIParser saxHandler = new MyCustomXMIParser();
-        saxParser.parse("D:\\workspace\\CirculationModel\\CirculationModel.uml", saxHandler);
+        saxParser.parse(path, saxHandler);
         
 		Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
 		
@@ -35,48 +36,48 @@ public class XMLParser {
 				
 	    // Controller
         Template temp = cfg.getTemplate("controller.ftlh");
-		Writer fileOut = new FileWriter(new File(FILE_DIRECTORY + "AppController.java"));
-        map.put("list", saxHandler.models); 
+		Writer fileOut = new FileWriter(new File(destination + "AppController.java"));
+        map.put("list", saxHandler.models.values()); 
         temp.process(map, fileOut);
         
 
 		// Entities
         temp = cfg.getTemplate("entity.ftlh");
-        for(Model model : saxHandler.models) {
+        for(Model model : saxHandler.models.values()) {
         //	System.out.println(model);
         	map.put("model", model); 
-            fileOut = new FileWriter(new File(FILE_DIRECTORY + "Entities\\" + model.getClassName() + ".java"));
+            fileOut = new FileWriter(new File(destination + "Entities\\" + model.getName()+ ".java"));
         	temp.process(map, fileOut);
         }
         
         // Repositories
         temp = cfg.getTemplate("repo.ftlh");
-        for(Model model : saxHandler.models) {
+        for(Model model : saxHandler.models.values()) {
         	map.put("model", model); 
-            fileOut = new FileWriter(new File(FILE_DIRECTORY + model.getClassName() + "Repository.java"));
+            fileOut = new FileWriter(new File(destination + model.getName() + "Repository.java"));
         	temp.process(map, fileOut);
         }
         
         // Index View
         temp = cfg.getTemplate("index.ftlh");
-	    fileOut = new FileWriter(new File(FILE_DIRECTORY + "index.html"));
-        map.put("list", saxHandler.models); 
+	    fileOut = new FileWriter(new File(destination + "index.html"));
+        map.put("list", saxHandler.models.values()); 
         temp.process(map, fileOut);
         
         // List View
         temp = cfg.getTemplate("list.ftlh");
-        for(Model model : saxHandler.models) {
+        for(Model model : saxHandler.models.values()) {
         	map.put("model", model); 
-        	fileOut = new FileWriter(new File(FILE_DIRECTORY + model.getClassName().toLowerCase() + "List.html"));
+        	fileOut = new FileWriter(new File(destination + model.getName().toLowerCase() + "List.html"));
         	temp.process(map, fileOut);
         }
         
         // Form View
         temp = cfg.getTemplate("form.ftlh");
-        for(Model model : saxHandler.models) {
+        for(Model model : saxHandler.models.values()) {
         	map.put("model", model); 
-            fileOut = new FileWriter(new File(FILE_DIRECTORY + model.getClassName().toLowerCase() + "Form.html"));
+            fileOut = new FileWriter(new File(destination + model.getName().toLowerCase() + "Form.html"));
         	temp.process(map, fileOut);
-        }          
-	}
+        }        
+    }
 }
