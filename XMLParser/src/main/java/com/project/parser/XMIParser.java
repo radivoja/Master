@@ -13,7 +13,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.project.model.Model;
 import com.project.model.Property;
 
-public class MyCustomXMIParser extends DefaultHandler{
+public class XMIParser extends DefaultHandler{
 
 	public Map<String, Model> models = new HashMap<String, Model>();
     public Model model = null;

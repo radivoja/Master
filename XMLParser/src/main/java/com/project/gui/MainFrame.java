@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 
 import com.project.parser.XMLParser;
 
-public class MyFrame extends JFrame {
+public class MainFrame extends JFrame {
 
 	private static final long serialVersionUID = 7933447493166704041L;
 	JButton btModel;
@@ -25,7 +25,7 @@ public class MyFrame extends JFrame {
 	JTextField tfDest;
 	JTextField tfModel;
 
-	public MyFrame() {
+	public MainFrame() {
 		JPanel panelCenter = new JPanel();
 		BoxLayout box = new BoxLayout(panelCenter, BoxLayout.Y_AXIS);
 		panelCenter.setLayout(box);
@@ -101,7 +101,7 @@ public class MyFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		MyFrame mf = new MyFrame();
+		MainFrame mf = new MainFrame();
 		mf.setVisible(true);
 	}
 

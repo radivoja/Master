@@ -26,7 +26,7 @@ public class XMLParser {
     public static void generate(String path, String destination) throws SAXException, IOException, ParserConfigurationException, TemplateException{
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        MyCustomXMIParser saxHandler = new MyCustomXMIParser();
+        XMIParser saxHandler = new XMIParser();
         saxParser.parse(path, saxHandler);
         
 		Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
