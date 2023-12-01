@@ -1,4 +1,4 @@
-package com.candyshop;
+package com.project.model;
 
 public class Association {
 	private String id;

@@ -1,4 +1,4 @@
-package com.candyshop;
+package com.project.parser;
 
 import java.io.File;
 import java.io.FileWriter;

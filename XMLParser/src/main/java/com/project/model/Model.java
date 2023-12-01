@@ -1,4 +1,4 @@
-package com.candyshop;
+package com.project.model;
 
 import java.util.ArrayList;
 import java.util.List;

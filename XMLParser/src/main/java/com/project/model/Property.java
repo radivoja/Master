@@ -1,4 +1,4 @@
-package com.candyshop;
+package com.project.model;
 
 public class Property {
     private String id;

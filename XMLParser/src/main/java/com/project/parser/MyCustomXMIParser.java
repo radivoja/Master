@@ -1,4 +1,4 @@
-package com.candyshop;
+package com.project.parser;
 
 import java.io.FileWriter;
 import java.io.IOException;
