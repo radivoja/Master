@@ -15,7 +15,7 @@ import com.project.model.Property;
 
 public class XMIParser extends DefaultHandler{
 
-	public Map<String, Model> models = new HashMap<String, Model>();
+	public Map<String, Model> models = new HashMap<>();
     public Model model = null;
     Property property = null;
 
@@ -25,7 +25,7 @@ public class XMIParser extends DefaultHandler{
     }
 
     @Override
-    public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+    public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
         // Initialize the model object
         if (qName.equals("packagedElement") && attributes.getValue("xmi:type").equals("uml:Class")) {
@@ -69,7 +69,7 @@ public class XMIParser extends DefaultHandler{
     }
 
     @Override
-    public void endDocument() throws SAXException {
+    public void endDocument() {
         for (Model model : models.values()) {
             for (Property property : model.getProperties()) {
                 if (property.getAssociation() != null) {
@@ -100,7 +100,7 @@ public class XMIParser extends DefaultHandler{
                             relatedProperty.setMappedBy(relatedModel.getName());
                         }
                     }
-                    // Set Property association fields to null to prevent addiotional checking 
+                    // Set Property association fields to null to prevent additional checking
                     // since we resolve cardinality for both sides in single iteration 
                     property.setAssociation(null);
                     relatedProperty.setAssociation(null);
@@ -114,7 +114,7 @@ public class XMIParser extends DefaultHandler{
         }
     }
 
-    public Property getRelatedProperty(Model model, String association) {  
+    public Property getRelatedProperty(Model model, String association) {
         Property property = model.getProperties().stream()
                 .filter(prop -> prop.getAssociation() != null)
                 .filter(prop -> prop.getAssociation().equals(association))
@@ -157,9 +157,5 @@ public class XMIParser extends DefaultHandler{
         return type;
     }
 
-	@Override
-	public void endElement(String uri, String localName, String qualifiedName) throws SAXException {
-
-	}
 
 }
