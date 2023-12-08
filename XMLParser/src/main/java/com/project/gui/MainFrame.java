@@ -13,7 +13,7 @@ public class MainFrame extends JFrame {
 
 	private static final String BUTTON_NAME = "Open";
 	private static final String MODEL_NAME = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
-	private static final String FILE_DIRECTORY = "C:\\Users\\User\\Desktop\\Generated\\";
+	private static final String FILE_DIRECTORY = "D:\\Workspace\\Test-Project\\src\\main\\java\\com\\project\\";
 	private final JTextField tfDest = new JTextField(FILE_DIRECTORY, 30);
 	private final JTextField tfModel =  new JTextField(MODEL_NAME, 30);
 
