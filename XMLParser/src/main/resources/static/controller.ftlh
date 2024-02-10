@@ -1,54 +1,99 @@
 package com.project.controller;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-<#list list as item>
-import com.project.repositories.${item.name}Repository;
-import com.project.entities.${item.name};
-</#list>
+import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+[#list model.properties as property]
+	[#if property.relationship?exists && property.relationship == 'ManyToOne']
+		import com.project.repositories.[=property.name?cap_first]Repository;
+		import com.project.entities.[=property.name?cap_first];
+	[/#if]
+[/#list]
+import com.project.repositories.[=model.name?cap_first]Repository;
+import com.project.entities.[=model.name?cap_first];
 
 @Controller
-public class AppController {
+public class [=model.name?cap_first]Controller {
 
-<#list list as item>
+	private final [=model.name?cap_first]Repository [=model.name]Repository;
+[#list model.properties as property]
+	[#if property.relationship?exists && property.relationship == 'ManyToOne']
 	@Autowired
-	private ${item.name}Repository ${item.name?lower_case}Repository;
-</#list>
+	private [=property.name?cap_first]Repository [=property.name]Repository;
+	[/#if]
+[/#list]
 
-<#list list as item>
-<#assign name = item.name?lower_case>
-
+	public [=model.name?cap_first]Controller([=model.name?cap_first]Repository [=model.name]Repository){
+		this.[=model.name]Repository = [=model.name]Repository;
+	}
 
 	// 1. Get
-	@GetMapping("/${name}List")
-	public String get${name?cap_first}List(Model model) {
-		model.addAttribute("${name}List", ${name}Repository.findAll());
-		return "${name}List";
+	@GetMapping("/[=model.name]List")
+	public String geto[=model.name?cap_first]List(Model model) {
+		model.addAttribute("[=model.name]List", [=model.name]Repository.findAll());
+		[#list model.properties as property]
+			[#if property.relationship?exists && property.relationship == 'ManyToOne']
+		model.addAttribute("[=property.name]List", [=property.name]Repository.findAll());
+			[/#if]
+		[/#list]
+		return "[=model.name]List";
 	}
 
+
 	// 2. Form
-	@GetMapping("/${name}Form")
-	public String ${name?cap_first}Form(Model model) {
-		model.addAttribute("${name}", new ${name?cap_first}());
-	    return "${name}Form";
-	}
-	// 3. Edit
-	@GetMapping("/${name}Edit/{id}")
-	public String ${name}Edit(Model model, @PathVariable Integer id) {
-		${item.name} ${name} = ${name}Repository.findById(id).get();
-		model.addAttribute("${name}", ${name});
-		return "${name}Form";
+	@GetMapping("/[=model.name]Form")
+    public String formo(Model model, @RequestParam(name="para", required=false) Optional<Integer> para) {
+		[#list model.properties as property]
+			[#if property.relationship?exists && property.relationship == 'ManyToOne']
+		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
+			[/#if]
+		[/#list]
+
+		if (para.isPresent()) {
+            Optional<[=model.name?cap_first]> [=model.name] = [=model.name]Repository.findById(para.get());
+			model.addAttribute("[=model.name]", [=model.name]);
+	    return "[=model.name]Form";
+		} else {
+			model.addAttribute("[=model.name]", new [=model.name?cap_first]());
+		}
+		return "[=model.name]Form";
 	}
 	
-	// 4. Post
-	@PostMapping("/${name}Post")
-	public String ${name}Post(@ModelAttribute("${name}") ${name?cap_first} ${name}) {
-		${name}Repository.save(${name});
-		return "redirect:/${name}List";
+	// 3. Post
+	@PostMapping("/[=model.name]Post")
+	    public String posto(Model model, @Valid [=model.name?cap_first] [=model.name],
+                                 BindingResult bindingResult, @RequestParam(name="para", required=false) Optional<Integer> para) {
+		[#list model.properties as property]
+			[#if property.relationship?exists && property.relationship == 'ManyToOne']
+		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
+			[/#if]
+		[/#list]
+		
+		if(bindingResult.hasErrors()){
+            return "[=model.name]Form";
+        }
+
+        if(para.isEmpty() && [=model.name]Repository.existsById([=model.name].getId())){
+            bindingResult.addError(new FieldError("[=model.name]", "Id", "Id already in use"));
+            return "[=model.name]Form";
+        }
+		
+		[=model.name]Repository.save([=model.name]);
+		return "redirect:/[=model.name]List";
 	}
-</#list>
+
+	// 4. Delete
+	@GetMapping("/delete[=model.name?cap_first]")
+	public String deleto(@RequestParam(name="id") Optional<Integer> id){
+		id.ifPresent(integer -> [=model.name]Repository.deleteById(integer));
+		return "redirect:/[=model.name]List";
+	}
 }

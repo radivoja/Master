@@ -1,49 +1,39 @@
-<style>
-table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-td:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
-<#assign listSting = "$" + "{"+ "${model.name?lower_case}List" + "}">
-<#assign editPar = "$" + "{"+ "${model.name?lower_case}" + ".id"+"})}">
 
 <html xmlns:th="http://www.thymeleaf.org">
+	<link th:href="@{/style.css}" rel="stylesheet" />
 	<head>
-		<title> ${model.name}</title>
+		<title>[=model.name]</title>
 	</head>	
 	<body>
-	<a th:href="@{${model.name?lower_case}Form}"> ${model.name} </a> </div>
-	<table border='1'>
-		<thead>
-			<tr>
-<#list model.properties as property>
-				<th> ${property.name} </th>
-</#list>
+		<header class="header">
+    		<a class="dd-toggle" th:href="@{index}">Index</a>
+    		<a class="dd-toggle" th:href="@{[=model.name]Form}">[=model.name] Form</a>
+			<a class="dd-toggle" th:href="@{[=model.name]List}">[=model.name] List</a>
+		</header>
+		<table class="table table-striped table-bordered table-hover">
+			<thead>
+				<tr>
+[#list model.properties as property]
+					<th> [=property.name] </th>
+[/#list]
+					<th> Edit </th>
+					<th> Delete </th>
+				</tr>
+			</thead>
+			<tbody>		
+				<tr th:each="[=model.name] : ${[=model.name]List}">
+		[#list model.properties as property]
+[#if property.relationship?exists && property.relationship == 'ManyToOne']
+        <td> <a th:href="@{/[=property.name]Edit/{id}(id=${[=model.name]?.[=property.name].id})} "> <div th:text="${[=model.name]?.[=property.name]}"></div> </a></td>
 
-
-				<th> Edit </th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr th:each="${model.name?lower_case} : ${listSting}">
-<#list model.properties as property>
-<#assign name = "$" + "{"+ "${model.name?lower_case}.${property.name}" + "}">
-				<td th:text="${name?replace(" ", "")}"></td>
-</#list>
-				<td><a th:href="@{/${model.name?lower_case}Edit/{id}(id=${editPar}">Edit</a></td>
-			<tr>
-		</tbody>
-	</table>
+[#else]	
+        			<td th:text="${[=model.name].[=property.name]}"></td>
+[/#if]
+[/#list]
+        			<td><a th:href="@{/[=model.name]Form(para=${[=model.name].id})}">Промени коки шињац</a></td>
+					<td><a th:href="@{/delete[=model.name?cap_first](id=${[=model.name].id})}">Обриши коки шињац</a></td>
+				<tr>
+			</tbody>
+		</table>
 	</body>
 </html>

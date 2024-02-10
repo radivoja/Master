@@ -112,6 +112,13 @@ public class XMIParser extends DefaultHandler{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        setModelNameToLowerCase();
+    }
+
+    public void setModelNameToLowerCase(){
+        for (Model model : models.values()) {
+            model.setName(model.getName().toLowerCase());
+        }          
     }
 
     public Property getRelatedProperty(Model model, String association) {

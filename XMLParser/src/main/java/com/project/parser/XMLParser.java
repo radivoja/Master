@@ -7,6 +7,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -30,15 +32,22 @@ public class XMLParser {
 
 
 		Configuration cfg = new Configuration(Configuration.VERSION_2_3_32);
+        cfg.setInterpolationSyntax(Configuration.SQUARE_BRACKET_INTERPOLATION_SYNTAX);
+        cfg.setTagSyntax(Configuration.SQUARE_BRACKET_TAG_SYNTAX);
 		
 		cfg.setDirectoryForTemplateLoading(new File("D:\\Workspace\\Master\\XMLParser\\src\\main\\resources\\static"));
 		Map<String, Object> map = new HashMap<>();
 				
 	    // Controller
         Template temp = cfg.getTemplate("controller.ftlh");
-		Writer fileOut = new FileWriter(destination + "controller\\"+ "AppController.java");
-        map.put("list", saxHandler.models.values()); 
-        temp.process(map, fileOut);
+        Writer fileOut;
+        
+        for(Model model : saxHandler.models.values()) {
+        	map.put("model", model); 
+            fileOut = new FileWriter(destination + "controller\\" + StringUtils.capitalize(model.getName()) + "Controller.java");
+        	temp.process(map, fileOut);
+        }
+
         
 
 		// Entities
@@ -59,17 +68,19 @@ public class XMLParser {
         }
 
 
+        /* *
         // Index View
         temp = cfg.getTemplate("index.ftlh");
 	    fileOut = new FileWriter(thymeleafPages + "index.html");
         map.put("list", saxHandler.models.values()); 
         temp.process(map, fileOut);
         
+*/
         // List View
-        temp = cfg.getTemplate("list.ftlh");
+         temp = cfg.getTemplate("list.ftlh");
         for(Model model : saxHandler.models.values()) {
         	map.put("model", model); 
-        	fileOut = new FileWriter(thymeleafPages + model.getName().toLowerCase() + "List.html");
+            fileOut = new FileWriter(thymeleafPages + model.getName() + "List.html");
         	temp.process(map, fileOut);
         }
         
@@ -77,8 +88,8 @@ public class XMLParser {
         temp = cfg.getTemplate("form.ftlh");
         for(Model model : saxHandler.models.values()) {
         	map.put("model", model); 
-            fileOut = new FileWriter(thymeleafPages + model.getName().toLowerCase() + "Form.html");
+            fileOut = new FileWriter(thymeleafPages + model.getName() + "Form.html");
         	temp.process(map, fileOut);
-        }        
+        }      
     }
 }
