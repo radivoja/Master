@@ -7,13 +7,14 @@ import java.awt.FlowLayout;
 
 import javax.swing.*;
 
-import com.project.parser.XMLParser;
-
 public class MainFrame extends JFrame {
 
 	private static final String BUTTON_NAME = "Open";
 	private static final String MODEL_NAME = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
-	private static final String FILE_DIRECTORY = "D:\\Workspace\\Test-Project\\src\\main\\java\\com\\project\\";
+
+
+	private static final String FILE_DIRECTORY = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
+
 	private final JTextField tfDest = new JTextField(FILE_DIRECTORY, 30);
 	private final JTextField tfModel =  new JTextField(MODEL_NAME, 30);
 
@@ -80,7 +81,7 @@ public class MainFrame extends JFrame {
 					}
 					default -> {
 						System.out.println("Successful generation");
-						XMLParser.generate(tfModel.getText(), tfDest.getText());
+						//XMLParser.generate(tfModel.getText(), tfDest.getText());
 					}
 				}
 			} catch (Exception e1) {

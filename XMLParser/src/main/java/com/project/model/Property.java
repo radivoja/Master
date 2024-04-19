@@ -1,5 +1,7 @@
 package com.project.model;
 
+import java.util.List;
+
 public class Property {
     private String id;
     private String name;
@@ -9,7 +11,14 @@ public class Property {
     private String upperValue;
     private String relationship;
 	private String mappedBy;
+    private List<String> stereotypes;
     
+    public List<String> getStereotypes() {
+        return stereotypes;
+    }
+    public void setStereotypes(List<String> stereotypes) {
+        this.stereotypes = stereotypes;
+    }
     public String getMappedBy() {
 		return mappedBy;
 	}
@@ -61,7 +70,7 @@ public class Property {
     @Override
     public String toString() {
         return "Property [id=" + id + ", name=" + name + ", type=" + type + ", association=" + association
-                + ", lowerValue=" + lowerValue + ", upperValue=" + upperValue + ", relationship=" + relationship + "]";
+                + ", lowerValue=" + lowerValue + ", upperValue=" + upperValue + ", relationship=" + relationship + " " + stereotypes + "]";
     }    
 	
 }
