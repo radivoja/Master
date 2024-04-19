@@ -22,14 +22,14 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
-public class XMLParser {
+public class Loader {
 
     private String path;
     private String destination;
     private File templateDirectory;
     private Configuration configuration;
 
-    public XMLParser(String path, String destination, File templateDirectory) throws IOException {
+    public Loader(String path, String destination, File templateDirectory) throws IOException {
         this.path = path;
         this.destination = destination;
         this.templateDirectory = templateDirectory;

@@ -2,7 +2,6 @@ package com.project.gui;
 
 import com.project.parser.Component;
 import com.project.parser.Loader;
-import com.project.parser.XMLParser;
 import freemarker.template.TemplateException;
 import org.xml.sax.SAXException;
 
@@ -21,14 +20,14 @@ public class ConsoleApp {
     private static final String DESTINATION_THYMELEAF = "D:\\Workspace\\Test-Project\\src\\main\\resources\\templates\\";
 
     public static void main(String[] args) throws IOException, TemplateException, ParserConfigurationException, SAXException {
-        XMLParser parser = new XMLParser(PATH, DESTINATION, TEMPLATE_DIRECTORY);
-        parser.generateComponent(Component.ENTITY);
-        parser.generateComponent(Component.CONTROLLER);
-        parser.generateComponent(Component.REPOSITORY);
+        Loader loader = new Loader(PATH, DESTINATION, TEMPLATE_DIRECTORY);
+        loader.generateComponent(Component.ENTITY);
+        loader.generateComponent(Component.CONTROLLER);
+        loader.generateComponent(Component.REPOSITORY);
 
-        parser.setDestination(DESTINATION_THYMELEAF);
-        parser.generateComponent(Component.LIST);
-        parser.generateComponent(Component.FORM);
-        parser.generateIndex();
+        loader.setDestination(DESTINATION_THYMELEAF);
+        loader.generateComponent(Component.LIST);
+        loader.generateComponent(Component.FORM);
+        loader.generateIndex();
     }
 }
