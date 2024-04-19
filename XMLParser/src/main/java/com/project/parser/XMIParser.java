@@ -5,19 +5,32 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import com.project.model.Stereotype;
 import com.project.model.Model;
 import com.project.model.Property;
 
 public class XMIParser extends DefaultHandler{
 
 	public Map<String, Model> models = new HashMap<>();
+    TreeMap<String, Stereotype> stereotypes = new TreeMap<>();
     public Model model = null;
     Property property = null;
+    public static String STEREOTYPE_ENTITY = "MyMetaModel:Entity";
+    public static String STEREOTYPE_KEY = "MyMetaModel:Key";
+    public static String STEREOTYPE_TOSTRING = "MyMetaModel:ToString";
+    public static String STEREOTYPE_UNIQUE = "MyMetaModel:Unique";
+
+    public static String STEREOTYPE_COMMON = "MyMetaModel:Common";
+    public static String BASE_CLASS = "base_Class";
+    public static String BASE_PROPERTY = "base_Property";
+    public static String UML_CLASS = "uml:Class";
 
     @Override
     public void startDocument() throws SAXException {
@@ -28,13 +41,12 @@ public class XMIParser extends DefaultHandler{
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
         // Initialize the model object
-        if (qName.equals("packagedElement") && attributes.getValue("xmi:type").equals("uml:Class")) {
+        if (qName.equals("packagedElement") && (attributes.getValue("xmi:type").equals(UML_CLASS))) {
             model = new Model();
             String id = attributes.getValue("xmi:id");
             String name = attributes.getValue("name");
             model.setId(id);
             model.setName(name);
-
             models.put(id, model);
         }
 
@@ -54,6 +66,7 @@ public class XMIParser extends DefaultHandler{
             }
         }
 
+        // Cardinality
         if (qName.equals("upperValue")) {
             property.setUpperValue(attributes.getValue("value"));
         }
@@ -65,6 +78,42 @@ public class XMIParser extends DefaultHandler{
         // Property type
         if (qName.equals("type")) {
             property.setType(getType(attributes));
+        }
+
+
+        // Stereotypes
+        if(qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON)){
+            Stereotype stereotype = new Stereotype();
+            stereotype.setName(qName);
+            
+            if(attributes.getValue(BASE_CLASS) != null){
+                stereotype.setBase(attributes.getValue(BASE_CLASS));
+            }
+            else{
+                stereotype.setBase(attributes.getValue(BASE_PROPERTY));
+            }
+           
+            stereotype.setId(stereotype.getBase() + " " + attributes.getValue("xmi:id"));
+            stereotypes.put(stereotype.getId(), stereotype); 
+            
+            if(attributes.getValue("length") != null)  {
+                stereotype.setLength(attributes.getValue("length"));
+            }     
+        }
+    }
+
+    public void fillStereotypes(){
+        for(Model model : models.values()){
+            for(Property property: model.getProperties()){
+                String idProperty = property.getId();
+                
+                var subMap = stereotypes.subMap(idProperty, idProperty+1);
+                if (!subMap.isEmpty()) {
+                    for (Stereotype stereotype : subMap.values()) {
+                        System.out.println(property.getName() +  "->" + stereotype);
+                    }
+                }
+            }
         }
     }
 
@@ -113,6 +162,7 @@ public class XMIParser extends DefaultHandler{
             e.printStackTrace();
         }
         setModelNameToLowerCase();
+        fillStereotypes();
     }
 
     public void setModelNameToLowerCase(){
@@ -132,15 +182,32 @@ public class XMIParser extends DefaultHandler{
 
     private void printInfo() throws IOException {
         String fileName = "C:\\Users\\User\\Desktop\\test.txt";
-        PrintWriter out = new PrintWriter(new FileWriter(fileName));
-
+        PrintWriter printWriter = new PrintWriter(new FileWriter(fileName));
+        SortedMap<String, Stereotype> sortedMap = new TreeMap<>();
         for (Model model : models.values()) {
-            out.println(model.getName() + " " + model.getId());
+            printWriter.println(model.getName() + " " + model.getId());
+            int i = 0;
+
+            
             for (Property property : model.getProperties()) {
-                out.println(property);
+                i++;
+                printWriter.println(i + ":"+ property);
+                String idProperty = property.getId();
+                
+                SortedMap<String, Stereotype> subMapOfStereotypes = stereotypes.subMap(idProperty, idProperty+1);             
+                if (!subMapOfStereotypes.isEmpty()){
+                    printWriter.println(subMapOfStereotypes);
+                    sortedMap.putAll(subMapOfStereotypes);
+                }
             }
         }
-        out.close();
+        printWriter.println("Size" + sortedMap.size());
+        System.out.println("Size" + sortedMap.size());
+        sortedMap.forEach((k,v) -> System.out.println("Key: " + k + "Value:" + v.toString()));
+        printWriter.println();
+        stereotypes.values().forEach(stereo -> printWriter.println(stereo));
+        printWriter.println(); 
+        printWriter.close();
     }
 
     private String getType(Attributes attributes) {
@@ -160,9 +227,7 @@ public class XMIParser extends DefaultHandler{
         if (type.endsWith("EDouble") || type.endsWith("Double")) {
             return "Double";
         }
-        
+
         return type;
     }
-
-
 }
