@@ -1,3 +1,10 @@
+[#function checkManyToOne property ]
+    [#if property.relationship?? && property.relationship == 'ManyToOne']
+        [#return true]
+    [#else]
+        [#return false]
+    [/#if]
+[/#function]
 package com.project.controller;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +19,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 [#list model.properties as property]
-	[#if property.relationship?exists && property.relationship == 'ManyToOne']
-		import com.project.repositories.[=property.name?cap_first]Repository;
-		import com.project.entities.[=property.name?cap_first];
+	[#if checkManyToOne(property)]
+import com.project.repository.[=property.name?cap_first]Repository;
+import com.project.entity.[=property.name?cap_first];
 	[/#if]
 [/#list]
-import com.project.repositories.[=model.name?cap_first]Repository;
-import com.project.entities.[=model.name?cap_first];
+import com.project.repository.[=model.name?cap_first]Repository;
+import com.project.entity.[=model.name?cap_first];
 
 @Controller
 public class [=model.name?cap_first]Controller {
 
 	private final [=model.name?cap_first]Repository [=model.name]Repository;
+
 [#list model.properties as property]
-	[#if property.relationship?exists && property.relationship == 'ManyToOne']
+	[#if checkManyToOne(property)]
 	@Autowired
 	private [=property.name?cap_first]Repository [=property.name]Repository;
+
 	[/#if]
 [/#list]
 
@@ -37,22 +46,21 @@ public class [=model.name?cap_first]Controller {
 
 	// 1. Get
 	@GetMapping("/[=model.name]List")
-	public String geto[=model.name?cap_first]List(Model model) {
+	public String getList[=model.name?cap_first]List(Model model) {
 		model.addAttribute("[=model.name]List", [=model.name]Repository.findAll());
 		[#list model.properties as property]
-			[#if property.relationship?exists && property.relationship == 'ManyToOne']
+			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", [=property.name]Repository.findAll());
 			[/#if]
 		[/#list]
 		return "[=model.name]List";
 	}
 
-
 	// 2. Form
 	@GetMapping("/[=model.name]Form")
-    public String formo(Model model, @RequestParam(name="para", required=false) Optional<Integer> para) {
+    public String prepareForm(Model model, @RequestParam(name="para", required=false) Optional<Integer> para) {
 		[#list model.properties as property]
-			[#if property.relationship?exists && property.relationship == 'ManyToOne']
+			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
 			[/#if]
 		[/#list]
@@ -69,10 +77,10 @@ public class [=model.name?cap_first]Controller {
 	
 	// 3. Post
 	@PostMapping("/[=model.name]Post")
-	    public String posto(Model model, @Valid [=model.name?cap_first] [=model.name],
+	    public String formPost(Model model, @Valid [=model.name?cap_first] [=model.name],
                                  BindingResult bindingResult, @RequestParam(name="para", required=false) Optional<Integer> para) {
 		[#list model.properties as property]
-			[#if property.relationship?exists && property.relationship == 'ManyToOne']
+			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
 			[/#if]
 		[/#list]
@@ -92,7 +100,7 @@ public class [=model.name?cap_first]Controller {
 
 	// 4. Delete
 	@GetMapping("/delete[=model.name?cap_first]")
-	public String deleto(@RequestParam(name="id") Optional<Integer> id){
+	public String delete(@RequestParam(name="id") Optional<Integer> id){
 		id.ifPresent(integer -> [=model.name]Repository.deleteById(integer));
 		return "redirect:/[=model.name]List";
 	}

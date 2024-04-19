@@ -1,14 +1,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 	<head>
-		<title style="text-align: center;">Kokosinjac</title>
+		<title style="text-align: center;">[=model.name?cap_first]</title>
 		<link th:href="@{/style.css}" rel="stylesheet" />
 	</head>
 
 	<body>
 		<header class="header">
 			<a class="dd-toggle" th:href="@{index}">Index</a>
-			<a class="dd-toggle" th:href="@{[=model.name]Form}">Form</a>
-			<a class="dd-toggle" th:href="@{[=model.name]List}">List</a>
+			<a class="dd-toggle" th:href="@{[=model.name]Form}">[=model.name?cap_first] Form</a>
+			<a class="dd-toggle" th:href="@{[=model.name]List}">[=model.name?cap_first] List</a>
 		</header>
 
 		<form th:action="@{/[=model.name]Post}" th:object="${[=model.name]}" method="POST" class="container-fluid" style="margin-top: 20px">

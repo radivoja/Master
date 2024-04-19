@@ -7,8 +7,8 @@
 	<body>
 		<header class="header">
     		<a class="dd-toggle" th:href="@{index}">Index</a>
-    		<a class="dd-toggle" th:href="@{[=model.name]Form}">[=model.name] Form</a>
-			<a class="dd-toggle" th:href="@{[=model.name]List}">[=model.name] List</a>
+    		<a class="dd-toggle" th:href="@{[=model.name]Form}">[=model.name?cap_first] Form</a>
+			<a class="dd-toggle" th:href="@{[=model.name]List}">[=model.name?cap_first] List</a>
 		</header>
 		<table class="table table-striped table-bordered table-hover">
 			<thead>
@@ -30,8 +30,8 @@
         			<td th:text="${[=model.name].[=property.name]}"></td>
 [/#if]
 [/#list]
-        			<td><a th:href="@{/[=model.name]Form(para=${[=model.name].id})}">Промени коки шињац</a></td>
-					<td><a th:href="@{/delete[=model.name?cap_first](id=${[=model.name].id})}">Обриши коки шињац</a></td>
+        			<td><a th:href="@{/[=model.name]Form(para=${[=model.name].id})}"> Edit </a></td>
+					<td><a th:href="@{/delete[=model.name?cap_first](id=${[=model.name].id})}"> Delete </a></td>
 				<tr>
 			</tbody>
 		</table>
