@@ -4,7 +4,7 @@ public class Stereotype {
     private String id;
     private String name;
     private String base;
-    private String length;
+    private String type;
 
     public String getId() {
         return id;
@@ -24,15 +24,14 @@ public class Stereotype {
     public void setBase(String base) {
         this.base = base;
     }
-    public String getLength() {
-        return length;
-    }
-    public void setLength(String length) {
-        this.length = length;
-    }
     @Override
     public String toString() {
-        return "Stereotype [name=" + name + ", base=" + base + ", length=" + length + "]";
-    } 
-
+        return "Stereotype [name=" + name + ", id=" + id + ", base=" + base + ", type=" + type + "]";
+    }
+    public String getType() {
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
+    }
 }

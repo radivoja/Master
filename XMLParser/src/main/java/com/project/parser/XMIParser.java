@@ -3,10 +3,7 @@ package com.project.parser;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -19,9 +16,12 @@ import com.project.model.Property;
 public class XMIParser extends DefaultHandler{
 
 	public Map<String, Model> models = new HashMap<>();
-    TreeMap<String, Stereotype> stereotypes = new TreeMap<>();
-    public Model model = null;
-    Property property = null;
+    List stereotypes = new ArrayList<Stereotype>();
+    Map properties = new HashMap<String, Property>();
+
+    List propertiesList;
+
+    Property property;
     public static String STEREOTYPE_ENTITY = "MyMetaModel:Entity";
     public static String STEREOTYPE_KEY = "MyMetaModel:Key";
     public static String STEREOTYPE_TOSTRING = "MyMetaModel:ToString";
@@ -41,29 +41,18 @@ public class XMIParser extends DefaultHandler{
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
         // Initialize the model object
-        if (qName.equals("packagedElement") && (attributes.getValue("xmi:type").equals(UML_CLASS))) {
-            model = new Model();
-            String id = attributes.getValue("xmi:id");
-            String name = attributes.getValue("name");
-            model.setId(id);
-            model.setName(name);
-            models.put(id, model);
+        if(checkModel(qName, attributes)){
+            Model model = parseModel(attributes);
+            propertiesList = new ArrayList<Property>();
+            model.setProperties(propertiesList);
+            models.put(model.getId(), model);
         }
 
         // Initialize the properties
-        if (qName.equals("ownedAttribute") && attributes.getValue("xmi:type").equals("uml:Property")) {
-            property = new Property();
-            model.getProperties().add(property);
-            String id = attributes.getValue("xmi:id");
-            String name = attributes.getValue("name");
-            property.setId(id);
-            property.setName(name);
-
-            String association = attributes.getValue("association");
-            if (association != null) {
-                property.setAssociation(association);
-                property.setType(attributes.getValue("type"));
-            }
+        if(checkProperty(qName, attributes)) {
+            property = parseProperty(attributes);
+            propertiesList.add(property);
+            properties.put(property.getId(), property);
         }
 
         // Cardinality
@@ -80,41 +69,70 @@ public class XMIParser extends DefaultHandler{
             property.setType(getType(attributes));
         }
 
-
         // Stereotypes
-        if(qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON)){
-            Stereotype stereotype = new Stereotype();
-            stereotype.setName(qName);
-            
-            if(attributes.getValue(BASE_CLASS) != null){
-                stereotype.setBase(attributes.getValue(BASE_CLASS));
-            }
-            else{
-                stereotype.setBase(attributes.getValue(BASE_PROPERTY));
-            }
-           
-            stereotype.setId(stereotype.getBase() + " " + attributes.getValue("xmi:id"));
-            stereotypes.put(stereotype.getId(), stereotype); 
-            
-            if(attributes.getValue("length") != null)  {
-                stereotype.setLength(attributes.getValue("length"));
-            }     
+        if(checkStereotype(qName)){
+            Stereotype stereotype = parseStereotype(qName, attributes);
+            stereotypes.add(stereotype);
         }
     }
 
-    public void fillStereotypes(){
-        for(Model model : models.values()){
-            for(Property property: model.getProperties()){
-                String idProperty = property.getId();
-                
-                var subMap = stereotypes.subMap(idProperty, idProperty+1);
-                if (!subMap.isEmpty()) {
-                    for (Stereotype stereotype : subMap.values()) {
-                        System.out.println(property.getName() +  "->" + stereotype);
-                    }
-                }
-            }
+    public boolean checkModel(String qName, Attributes attributes) {
+        if (qName.equals("packagedElement") && (attributes.getValue("xmi:type").equals(UML_CLASS))) {
+            return true;
         }
+        return false;
+    }
+    public boolean checkProperty(String qName, Attributes attributes){
+        if(qName.equals("ownedAttribute") && attributes.getValue("xmi:type").equals("uml:Property")){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkStereotype(String qName){
+        if(qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON)) {
+            return true;
+        }
+        return false;
+    }
+
+    public Model parseModel(Attributes attributes){
+        Model model = new Model();
+        model.setId(attributes.getValue("xmi:id"));
+        model.setName(attributes.getValue("name"));
+        return model;
+    }
+
+    public Stereotype parseStereotype(String qName , Attributes attributes){
+        Stereotype stereotype = new Stereotype();
+        stereotype.setName(qName);
+
+        if(attributes.getValue(BASE_CLASS) != null){
+            stereotype.setBase(attributes.getValue(BASE_CLASS));
+            stereotype.setType("baseClass");
+        }
+        else{
+            stereotype.setBase(attributes.getValue(BASE_PROPERTY));
+            stereotype.setType("baseProperty");
+        }
+
+        stereotype.setId(attributes.getValue("xmi:id"));
+        return stereotype;
+    }
+
+    public Property parseProperty(Attributes attributes) {
+        Property property = new Property();
+        String id = attributes.getValue("xmi:id");
+        String name = attributes.getValue("name");
+        property.setId(id);
+        property.setName(name);
+
+        String association = attributes.getValue("association");
+        if (association != null) {
+            property.setAssociation(association);
+            property.setType(attributes.getValue("type"));
+        }
+        return property;
     }
 
     @Override
@@ -162,7 +180,6 @@ public class XMIParser extends DefaultHandler{
             e.printStackTrace();
         }
         setModelNameToLowerCase();
-        fillStereotypes();
     }
 
     public void setModelNameToLowerCase(){
@@ -187,26 +204,7 @@ public class XMIParser extends DefaultHandler{
         for (Model model : models.values()) {
             printWriter.println(model.getName() + " " + model.getId());
             int i = 0;
-
-            
-            for (Property property : model.getProperties()) {
-                i++;
-                printWriter.println(i + ":"+ property);
-                String idProperty = property.getId();
-                
-                SortedMap<String, Stereotype> subMapOfStereotypes = stereotypes.subMap(idProperty, idProperty+1);             
-                if (!subMapOfStereotypes.isEmpty()){
-                    printWriter.println(subMapOfStereotypes);
-                    sortedMap.putAll(subMapOfStereotypes);
-                }
-            }
         }
-        printWriter.println("Size" + sortedMap.size());
-        System.out.println("Size" + sortedMap.size());
-        sortedMap.forEach((k,v) -> System.out.println("Key: " + k + "Value:" + v.toString()));
-        printWriter.println();
-        stereotypes.values().forEach(stereo -> printWriter.println(stereo));
-        printWriter.println(); 
         printWriter.close();
     }
 
