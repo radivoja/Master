@@ -31,8 +31,29 @@ public class [=model.name?cap_first] {
 	}
 [/#list]
 
-	@Override
-	public String toString() {
-		return "[=model.name]: " + [=model.properties[1].name];
-	}
+    @Override
+    public String toString() {
+        return [=checkToString()]
+    }
 }
+
+[#function checkToString]
+    [#assign retValue = ""]
+    [#list model.properties as property]
+        [#list property.stereotypes as stereo]
+        [retValue++]
+            [#if stereo.name == "MyMetaModel:ToString"]
+                [#if retValue?has_content]
+                    [#assign retValue+=" + "]
+                [/#if]
+                [#assign retValue = retValue + '"[=property.name]" + '?no_esc + property.name]
+            [/#if]
+        [/#list]
+     [/#list]
+     [#if retValue?has_content]
+        [#return retValue + ";"]
+     [/#if]
+
+      [#return '"'?no_esc + model.name+ ':"+'?no_esc  + model.properties[0].name + ";"]
+[/#function]
+
