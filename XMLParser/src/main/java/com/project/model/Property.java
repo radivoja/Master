@@ -11,12 +11,12 @@ public class Property {
     private String upperValue;
     private String relationship;
 	private String mappedBy;
-    private List<String> stereotypes;
+    private List<Stereotype> stereotypes;
     
-    public List<String> getStereotypes() {
+    public List<Stereotype> getStereotypes() {
         return stereotypes;
     }
-    public void setStereotypes(List<String> stereotypes) {
+    public void setStereotypes(List<Stereotype> stereotypes) {
         this.stereotypes = stereotypes;
     }
     public String getMappedBy() {

@@ -49,7 +49,7 @@ public class Loader {
         SAXParser saxParser = factory.newSAXParser();
         XMIParser xmiParser = new XMIParser();
         saxParser.parse(path, xmiParser);
-        return xmiParser.models.values();
+        return xmiParser.getModels().values();
     }
     public void generateComponent(Component component) throws ParserConfigurationException, IOException, SAXException, TemplateException {
         Map<String, Object> map = new HashMap<>();
