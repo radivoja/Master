@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 [#list model.properties as property]
 	[#if checkManyToOne(property)]
-import com.project.repository.[=property.name?cap_first]Repository;
-import com.project.entity.[=property.name?cap_first];
+import com.project.repositories.[=property.name?cap_first]Repository;
+import com.project.entities.[=property.name?cap_first];
 	[/#if]
 [/#list]
-import com.project.repository.[=model.name?cap_first]Repository;
-import com.project.entity.[=model.name?cap_first];
+import com.project.repositories.[=model.name?cap_first]Repository;
+import com.project.entities.[=model.name?cap_first];
 
 @Controller
 public class [=model.name?cap_first]Controller {

@@ -1,5 +1,6 @@
 package com.project.parser;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -205,7 +206,12 @@ public class XMIParser extends DefaultHandler {
 
     // Testing methhod
     private void printInfo() throws IOException {
-        String fileName = "C:\\Users\\User\\Desktop\\test.txt";
+        String fileName = "C:\\Users\\Aleksandar\\Desktop\\testGenerated.txt";
+        File file = new File(fileName);
+        boolean exist = file.exists();
+        if(!exist){
+            file.createNewFile();
+        }
         PrintWriter printWriter = new PrintWriter(new FileWriter(fileName));
         for (Model model : models.values()) {
             printWriter.println(model.getName() + " " + model.getId());

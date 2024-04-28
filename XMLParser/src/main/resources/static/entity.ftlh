@@ -10,7 +10,7 @@
     [/#if]
 [/#function]
 
-package com.project.entity;
+package com.project.entities;
 import java.util.List;
 import jakarta.persistence.*;
 
@@ -56,4 +56,3 @@ public class [=model.name?cap_first] {
 
       [#return '"'?no_esc + model.name+ ':"+'?no_esc  + model.properties[0].name + ";"]
 [/#function]
-

@@ -1,39 +1,70 @@
-
 <html xmlns:th="http://www.thymeleaf.org">
-	<link th:href="@{/style.css}" rel="stylesheet" />
-	<head>
-		<title>[=model.name]</title>
-	</head>	
-	<body>
-		<header class="header">
-    		<a class="dd-toggle" th:href="@{index}">Index</a>
-    		<a class="dd-toggle" th:href="@{[=model.name]Form}">[=model.name?cap_first] Form</a>
-			<a class="dd-toggle" th:href="@{[=model.name]List}">[=model.name?cap_first] List</a>
-		</header>
-		<table class="table table-striped table-bordered table-hover">
-			<thead>
-				<tr>
-[#list model.properties as property]
-					<th> [=property.name] </th>
-[/#list]
-					<th> Edit </th>
-					<th> Delete </th>
-				</tr>
-			</thead>
-			<tbody>		
-				<tr th:each="[=model.name] : ${[=model.name]List}">
-		[#list model.properties as property]
-[#if property.relationship?exists && property.relationship == 'ManyToOne']
-        <td> <a th:href="@{/[=property.name]Edit/{id}(id=${[=model.name]?.[=property.name].id})} "> <div th:text="${[=model.name]?.[=property.name]}"></div> </a></td>
-
-[#else]	
-        			<td th:text="${[=model.name].[=property.name]}"></td>
-[/#if]
-[/#list]
-        			<td><a th:href="@{/[=model.name]Form(para=${[=model.name].id})}"> Edit </a></td>
-					<td><a th:href="@{/delete[=model.name?cap_first](id=${[=model.name].id})}"> Delete </a></td>
-				<tr>
-			</tbody>
+[@topHeader item=model/]
+    <body>
+        <table class="table table-striped table-bordered table-hover">
+[@tableHeader item=model/]
+[@tableBody item=model/]
 		</table>
 	</body>
 </html>
+
+[#-- Top header--]
+[#macro topHeader item]
+	<link th:href="@{/style.css}" rel="stylesheet" />
+	<head>
+		<title>[=item.name?cap_first]</title>
+	</head>
+	<header class="header">
+    	<a class="dd-toggle" th:href="@{index}">Index</a>
+    	<a class="dd-toggle" th:href="@{[=item.name]Form}">[=item.name?cap_first] Form</a>
+		<a class="dd-toggle" th:href="@{[=item.name]List}">[=item.name?cap_first] List</a>
+	</header>
+[/#macro]
+
+[#-- Table header--]
+[#macro tableHeader item]
+            <thead>
+                <tr>
+[#list item.properties as property]
+				    <th> [=property.name] </th>
+[/#list]
+				    <th> Edit </th>
+				    <th> Delete </th>
+			    </tr>
+		    </thead>
+[/#macro]
+
+[#-- Table body--]
+[#macro tableBody item]
+		    <tbody>
+				<tr th:each="[=item.name] : ${[=item.name]List}">
+[@linkedEntity item=model/]
+[@editLink item=model/]
+[@delete item=model/]
+				<tr>
+			</tbody>
+[/#macro]
+
+[#-- Check if theres exist composite element and writes his link  --]
+[#macro linkedEntity item]
+		[#list item.properties as property]
+    [#if property.relationship?exists && property.relationship == 'ManyToOne']
+        <td> <a th:href="@{/[=property.name]Edit/{id}(id=${[=item.name]?.[=property.name].id})} "> <div th:text="${[=item.name]?.[=property.name]}"></div> </a></td>
+    [#else]
+        			<td th:text="${[=item.name].[=property.name]}"></td>
+    [/#if]
+[/#list]
+[/#macro]
+
+[#-- Link to form to edit  --]
+[#macro editLink item]
+        			<td><a th:href="@{/[=item.name]Form(para=${[=item.name].id})}"> Edit </a></td>
+[/#macro]
+
+[#-- Delete item  --]
+[#macro delete item]
+					<td><a th:href="@{/delete[=item.name?cap_first](id=${[=item.name].id})}"> Delete </a></td>
+[/#macro]
+
+
+

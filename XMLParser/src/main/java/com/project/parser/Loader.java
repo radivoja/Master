@@ -69,9 +69,9 @@ public class Loader {
             return new FileWriter(destination + model.getName() + StringUtils.capitalize(componentName) + ".html");
         } else {
             if((component.equals(Component.ENTITY))){
-                return new FileWriter(destination + componentName + "\\" + StringUtils.capitalize(model.getName()) +  ".java");
+                return new FileWriter(destination + "entities"+  "\\" + StringUtils.capitalize(model.getName()) +  ".java");
             } else {
-                return new FileWriter(destination + componentName + "\\" + StringUtils.capitalize(model.getName()) + StringUtils.capitalize(componentName) + ".java");
+                return new FileWriter(destination + "repositories" + "\\" + StringUtils.capitalize(model.getName()) + StringUtils.capitalize(componentName) + ".java");
             }
         }
     }
