@@ -1,19 +1,21 @@
 package com.project.parser;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
-import java.util.stream.Collectors;
-
+import com.project.model.Model;
+import com.project.model.Property;
+import com.project.model.Stereotype;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.project.model.Stereotype;
-import com.project.model.Model;
-import com.project.model.Property;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class XMIParser extends DefaultHandler {
 
@@ -62,9 +64,7 @@ public class XMIParser extends DefaultHandler {
         // Stereotypes
         if (checkStereotype(qName)) {
             Stereotype stereotype = parseStereotype(qName, attributes);
-            if (stereotype.getType().equals("baseProperty")) {
-                stereotypes.add(stereotype);
-            }
+            stereotypes.add(stereotype);
         }
     }
 
@@ -173,6 +173,14 @@ public class XMIParser extends DefaultHandler {
         }
     }
 
+    public void sortStereotypeforEntity() {
+        for(Stereotype stereotype : stereotypes){
+            if(stereotype.getType().equals("baseClass")){
+                models.get(stereotype.getBase()).setEntity(true);
+            }
+        }
+    }
+
     @Override
     public void endDocument() {
         for(Model model : models.values()){
@@ -180,6 +188,7 @@ public class XMIParser extends DefaultHandler {
             sortStereotype(model);
         }
 
+        sortStereotypeforEntity();
         try {
             printInfo();
         } catch (IOException e) {
@@ -255,7 +264,9 @@ public class XMIParser extends DefaultHandler {
     }
 
     public Map<String, Model> getModels() {
-        return models;
+        return models.entrySet().
+                stream().filter(x -> x.getValue().isEntity())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public static String STEREOTYPE_ENTITY = "MyMetaModel:Entity";

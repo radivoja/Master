@@ -6,6 +6,7 @@ import java.util.List;
 public class Model {
     private String id;
     private String name;
+    private boolean isEntity;
     private List<Property> properties = new ArrayList<>();
     public String getId() {
         return id;
@@ -28,5 +29,14 @@ public class Model {
     @Override
     public String toString() {
         return "Model [id=" + id + ", name=" + name + ", properties=" + properties + "]";
+    }
+
+
+    public boolean isEntity() {
+        return isEntity;
+    }
+
+    public void setEntity(boolean entity) {
+        isEntity = entity;
     }
 }
