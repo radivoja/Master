@@ -56,47 +56,59 @@ public class [=model.name?cap_first]Controller {
 		return "[=model.name]List";
 	}
 
-	// 2. Form
+	// 2.1 Prepare Form
 	@GetMapping("/[=model.name]Form")
-    public String prepareForm(Model model, @RequestParam(name="para", required=false) Optional<Integer> para) {
+    public String prepareForm(Model model) {
 		[#list model.properties as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
 			[/#if]
 		[/#list]
 
-		if (para.isPresent()) {
-            Optional<[=model.name?cap_first]> [=model.name] = [=model.name]Repository.findById(para.get());
-			model.addAttribute("[=model.name]", [=model.name]);
-	    return "[=model.name]Form";
-		} else {
-			model.addAttribute("[=model.name]", new [=model.name?cap_first]());
-		}
+		[=model.name?cap_first] [=model.name] = new [=model.name?cap_first]();
+		model.addAttribute("[=model.name]", [=model.name]);
 		return "[=model.name]Form";
 	}
 	
-	// 3. Post
-	@PostMapping("/[=model.name]Post")
-	    public String formPost(Model model, @Valid [=model.name?cap_first] [=model.name],
-                                 BindingResult bindingResult, @RequestParam(name="para", required=false) Optional<Integer> para) {
+	// 2.2 Post Form
+	@PostMapping("/[=model.name]Form")
+	    public String formPost(Model model, @Valid [=model.name?cap_first] [=model.name], BindingResult bindingResult) {
 		[#list model.properties as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
 			[/#if]
 		[/#list]
-		
-		if(bindingResult.hasErrors()){
+		if([=model.name]Repository.existsById([=model.name].getId())) {
+		    bindingResult.addError(new FieldError("[=model.name]", "Id", "Id already in use"));
+		    [=model.name].setId(null);
             return "[=model.name]Form";
         }
-
-        if(para.isEmpty() && [=model.name]Repository.existsById([=model.name].getId())){
-            bindingResult.addError(new FieldError("[=model.name]", "Id", "Id already in use"));
-            return "[=model.name]Form";
-        }
-		
-		[=model.name]Repository.save([=model.name]);
+        [=model.name]Repository.save([=model.name]);
 		return "redirect:/[=model.name]List";
 	}
+
+    // 3.1 Prepare Edit Form
+    @GetMapping("[=model.name]Form/{[=model.name]Id}/edit")
+    public String prepareUpdateForm(Model model, @PathVariable("[=model.name]Id") int [=model.name]Id){
+        Optional<[=model.name?cap_first]> [=model.name] = [=model.name]Repository.findById([=model.name]Id);
+        if([=model.name].isPresent()){
+            model.addAttribute("[=model.name]", [=model.name].get());
+            return "[=model.name]Form";
+        }
+        return "[=model.name]List";
+    }
+
+    // 3.2 Post Edit Form
+    @PostMapping("[=model.name]Form/{[=model.name]Id}/edit")
+    public String formUpdatePost(@Valid [=model.name?cap_first] [=model.name], @PathVariable("[=model.name]Id") int [=model.name]Id, BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "[=model.name]Form";
+        }
+        [=model.name].setId([=model.name]Id);
+        [=model.name]Repository.save([=model.name]);
+
+        return "redirect:/" + "[=model.name]List";
+    }
 
 	// 4. Delete
 	@GetMapping("/delete[=model.name?cap_first]")

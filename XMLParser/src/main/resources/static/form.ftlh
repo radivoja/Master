@@ -1,7 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 [@topHeader item=model/]
 	<body>
-		<form th:action="@{/[=model.name]Post}" th:object="${[=model.name]}" method="POST" class="container-fluid" style="margin-top: 20px">
+		<form th:object="${[=model.name]}" method="POST" class="container-fluid" style="margin-top: 20px">
 [#list model.properties as property]
 	[#if property.name == 'Id']
 	    [@idMacro/]
@@ -11,7 +11,7 @@
 	    [@normal property=property/]
 	[/#if]
 [/#list]
-		<button type="submit" th:text="${param.para == null} ? 'Create' : 'Update'"></button>
+		<button type="submit" th:text="${[=model.name].id == null} ? 'Create' : 'Update'"></button>
 		</form> 
 	</body>
 </html>
@@ -23,9 +23,9 @@
 		<title>[=item.name?cap_first]</title>
 	</head>
 	<header class="header">
-    	<a class="dd-toggle" th:href="@{index}">Index</a>
-    	<a class="dd-toggle" th:href="@{[=item.name]Form}">[=item.name?cap_first] Form</a>
-		<a class="dd-toggle" th:href="@{[=item.name]List}">[=item.name?cap_first] List</a>
+    	<a class="dd-toggle" th:href="@{/index}">Index</a>
+    	<a class="dd-toggle" th:href="@{/[=item.name]Form}">[=item.name?cap_first] Form</a>
+		<a class="dd-toggle" th:href="@{/[=item.name]List}">[=item.name?cap_first] List</a>
 	</header>
 [/#macro]
 
@@ -33,12 +33,11 @@
 [#macro idMacro]
 			<div class="form-group row">
 				<label class="col-2 col-form-label">Id</label>
-				<th:block th:if="${param.para == null}">
-					<input type="text" th:field="*{Id}">
-				</th:block>
-				<th:block th:unless="${param.para == null}">
-					<input type="text" th:field="*{Id}" disabled/>
-					<input type="hidden" name="para" value="1" />
+				    <th:block th:if="${[=model.name].id == null}">
+					    <input type="text" th:field="*{Id}">
+				    </th:block>
+				<th:block th:unless="${[=model.name].id == null}">
+					<input type="hidden" th:text="${[=model.name].Id}" th:field="*{Id}" />
 				</th:block>
 				<div style="margin-left:20px;" th:if="${#fields.hasErrors('Id')}" th:errors="*{Id}"> Error</div>
 			</div>

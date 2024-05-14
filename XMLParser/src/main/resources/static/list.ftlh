@@ -58,7 +58,7 @@
 
 [#-- Link to form to edit  --]
 [#macro editLink item]
-        			<td><a th:href="@{/[=item.name]Form(para=${[=item.name].id})}"> Edit </a></td>
+        			<td><a th:href="@{/[=item.name]Form/__${[=item.name].id}__/edit}"> Edit </a></td>
 [/#macro]
 
 [#-- Delete item  --]
