@@ -5,6 +5,9 @@ public class Stereotype {
     private String name;
     private String base;
     private String type;
+    private String minLength;
+    private String maxLength;
+    private String nullable;
 
     public String getId() {
         return id;
@@ -24,14 +27,48 @@ public class Stereotype {
     public void setBase(String base) {
         this.base = base;
     }
+
     @Override
     public String toString() {
-        return "Stereotype [name=" + name + ", id=" + id + ", base=" + base + ", type=" + type + "]";
+        return "Stereotype{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", base='" + base + '\'' +
+                ", type='" + type + '\'' +
+                ", minLength='" + minLength + '\'' +
+                ", maxLength='" + maxLength + '\'' +
+                ", nullable='" + nullable + '\'' +
+                '}';
     }
+
     public String getType() {
         return type;
     }
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(String minLength) {
+        this.minLength = minLength;
+    }
+
+    public String getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(String maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public String getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(String nullable) {
+        this.nullable = nullable;
     }
 }

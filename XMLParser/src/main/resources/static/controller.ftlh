@@ -78,6 +78,11 @@ public class [=model.name?cap_first]Controller {
 		model.addAttribute("[=property.name]", [=property.name]Repository.findAll());
 			[/#if]
 		[/#list]
+
+	    if(bindingResult.hasErrors()){
+			return "[=model.name]Form";
+		}
+
 		if([=model.name]Repository.existsById([=model.name].getId())) {
 		    bindingResult.addError(new FieldError("[=model.name]", "Id", "Id already in use"));
 		    [=model.name].setId(null);

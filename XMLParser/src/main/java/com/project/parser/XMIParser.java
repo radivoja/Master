@@ -83,7 +83,8 @@ public class XMIParser extends DefaultHandler {
     }
 
     public boolean checkStereotype(String qName) {
-        if (qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON)) {
+        if (qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_ENTITY_PROPERTY) ||
+                qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON)) {
             return true;
         }
         return false;
@@ -109,6 +110,19 @@ public class XMIParser extends DefaultHandler {
         }
 
         stereotype.setId(attributes.getValue("xmi:id"));
+
+        if(attributes.getValue("minLength") != null){
+            stereotype.setMinLength(attributes.getValue("minLength"));
+        }
+
+        if(attributes.getValue("maxLength") != null){
+            stereotype.setMaxLength(attributes.getValue("maxLength"));
+        }
+        if(attributes.getValue("nullable") != null){
+            stereotype.setNullable(attributes.getValue("nullable"));
+        }
+
+        System.out.println(stereotype);
         return stereotype;
     }
 
@@ -205,12 +219,11 @@ public class XMIParser extends DefaultHandler {
     }
 
     public Property getRelatedProperty(Model model, String association) {
-        Property property = model.getProperties().stream()
+        return model.getProperties().stream()
                 .filter(prop -> prop.getAssociation() != null)
                 .filter(prop -> prop.getAssociation().equals(association))
                 .findFirst()
                 .orElse(null);
-        return property;
     }
 
     // Testing methhod
@@ -272,6 +285,8 @@ public class XMIParser extends DefaultHandler {
     public static String STEREOTYPE_ENTITY = "MyMetaModel:Entity";
     public static String STEREOTYPE_KEY = "MyMetaModel:Key";
     public static String STEREOTYPE_TOSTRING = "MyMetaModel:ToString";
+
+    public static String STEREOTYPE_ENTITY_PROPERTY = "MyMetaModel:EntityProperty";
     public static String STEREOTYPE_UNIQUE = "MyMetaModel:Unique";
 
     public static String STEREOTYPE_COMMON = "MyMetaModel:Common";
