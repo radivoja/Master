@@ -1,6 +1,7 @@
 package com.project.parser;
 
 import com.project.model.Model;
+import com.project.model.Pageable;
 import com.project.model.Property;
 import com.project.model.Stereotype;
 import org.xml.sax.Attributes;
@@ -84,7 +85,7 @@ public class XMIParser extends DefaultHandler {
 
     public boolean checkStereotype(String qName) {
         if (qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_ENTITY_PROPERTY) ||
-                qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON)) {
+                qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON) || qName.equals(STEREOTYPE_PAGEABLE)) {
             return true;
         }
         return false;
@@ -120,6 +121,12 @@ public class XMIParser extends DefaultHandler {
         }
         if(attributes.getValue("nullable") != null){
             stereotype.setNullable(attributes.getValue("nullable"));
+        }
+        if(attributes.getValue("pageNo") != null){
+            stereotype.setPageNo(attributes.getValue("pageNo"));
+        }
+        if(attributes.getValue("pageSize") != null){
+            stereotype.setPageSize(attributes.getValue("pageSize"));
         }
 
         System.out.println(stereotype);
@@ -190,7 +197,14 @@ public class XMIParser extends DefaultHandler {
     public void sortStereotypeforEntity() {
         for(Stereotype stereotype : stereotypes){
             if(stereotype.getType().equals("baseClass")){
-                models.get(stereotype.getBase()).setEntity(true);
+                Model model = models.get(stereotype.getBase());
+                model.setEntity(true);
+                if(stereotype.getName().equals(STEREOTYPE_PAGEABLE)){
+                    Pageable pageable = new Pageable();
+                    pageable.setPageNo(stereotype.getPageNo());
+                    pageable.setPageSize(stereotype.getPageSize());
+                    model.setPageable(pageable);
+                }
             }
         }
     }
@@ -293,4 +307,5 @@ public class XMIParser extends DefaultHandler {
     public static String BASE_CLASS = "base_Class";
     public static String BASE_PROPERTY = "base_Property";
     public static String UML_CLASS = "uml:Class";
+    public static String STEREOTYPE_PAGEABLE = "MyMetaModel:Pageable";
 }

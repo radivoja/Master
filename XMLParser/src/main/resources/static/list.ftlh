@@ -1,6 +1,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 [@topHeader item=model/]
     <body>
+[@pageableLinks/]
         <table class="table table-striped table-bordered table-hover">
 [@tableHeader item=model/]
 [@tableBody item=model/]
@@ -19,6 +20,14 @@
     	<a class="dd-toggle" th:href="@{[=item.name]Form}">[=item.name?cap_first] Form</a>
 		<a class="dd-toggle" th:href="@{[=item.name]List}">[=item.name?cap_first] List</a>
 	</header>
+[/#macro]
+
+[#-- Pageable links --]
+[#macro pageableLinks]
+[#if model.pageable??]
+        <span><a th:if="${pageNo > 1}" th:href="@{'?pageNo='} + ${pageNo-1} + '&pageSize=' + ${pageSize}">Previous Page</a></span>
+        <span text-align="middle"><a th:if="${[=model.name]List.number < [=model.name].totalPages-1}" th:href="@{'?pageNo='} + ${pageNo+1} + '&pageSize=' + ${pageSize}">Next Page</a></span>
+[/#if]
 [/#macro]
 
 [#-- Table header--]

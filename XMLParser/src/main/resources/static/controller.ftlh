@@ -1,10 +1,3 @@
-[#function checkManyToOne property ]
-    [#if property.relationship?? && property.relationship == 'ManyToOne']
-        [#return true]
-    [#else]
-        [#return false]
-    [/#if]
-[/#function]
 package com.project.controller;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +10,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.*;
 import jakarta.validation.Valid;
+import java.util.List;
 [#list model.properties as property]
 	[#if checkManyToOne(property)]
 import com.project.repositories.[=property.name?cap_first]Repository;
@@ -46,8 +41,15 @@ public class [=model.name?cap_first]Controller {
 
 	// 1. Get
 	@GetMapping("/[=model.name]List")
-	public String getList[=model.name?cap_first]List(Model model) {
-		model.addAttribute("[=model.name]List", [=model.name]Repository.findAll());
+	public String getList[=model.name?cap_first]List(Model model[#if pageable(model)],@RequestParam(defaultValue = "[=model.pageable.pageNo]") int pageNo, @RequestParam(defaultValue = "[=model.pageable.pageSize]") int pageSize [/#if]) {
+	    [#if pageable(model)]
+	    Page<[=model.name?cap_first]> [=model.name]List = get[=model.name?cap_first]Page(pageNo, pageSize);
+        model.addAttribute("pageNo", pageNo);
+        model.addAttribute("pageSize", pageSize);
+        [#else]
+        List<[=model.name?cap_first]> [=model.name]List = [=model.name]Repository.findAll();
+	    [/#if]
+		model.addAttribute("[=model.name]List", [=model.name]List);
 		[#list model.properties as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", [=property.name]Repository.findAll());
@@ -55,6 +57,13 @@ public class [=model.name?cap_first]Controller {
 		[/#list]
 		return "[=model.name]List";
 	}
+
+    [#if pageable(model)]
+	public Page<[=model.name?cap_first]> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
+    	Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+    	return [=model.name]Repository.findAll(pageable);
+    }
+    [/#if]
 
 	// 2.1 Prepare Form
 	@GetMapping("/[=model.name]Form")
@@ -122,3 +131,19 @@ public class [=model.name?cap_first]Controller {
 		return "redirect:/[=model.name]List";
 	}
 }
+
+[#function checkManyToOne property]
+    [#if property.relationship?? && property.relationship == 'ManyToOne']
+        [#return true]
+    [#else]
+        [#return false]
+    [/#if]
+[/#function]
+
+[#function pageable model]
+    [#if model.pageable??]
+        [#return true]
+    [#else]
+        [#return false]
+    [/#if]
+[/#function]

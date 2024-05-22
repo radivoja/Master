@@ -7,6 +7,7 @@ public class Model {
     private String id;
     private String name;
     private boolean isEntity;
+    private Pageable pageable;
     private List<Property> properties = new ArrayList<>();
     public String getId() {
         return id;
@@ -38,5 +39,13 @@ public class Model {
 
     public void setEntity(boolean entity) {
         isEntity = entity;
+    }
+
+    public Pageable getPageable() {
+        return pageable;
+    }
+
+    public void setPageable(Pageable pageable) {
+        this.pageable = pageable;
     }
 }
