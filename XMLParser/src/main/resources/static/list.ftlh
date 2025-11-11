@@ -26,7 +26,7 @@
 [#macro pageableLinks]
 [#if model.pageable??]
         <span><a th:if="${pageNo > 1}" th:href="@{'?pageNo='} + ${pageNo-1} + '&pageSize=' + ${pageSize}">Previous Page</a></span>
-        <span text-align="middle"><a th:if="${[=model.name]List.number < [=model.name].totalPages-1}" th:href="@{'?pageNo='} + ${pageNo+1} + '&pageSize=' + ${pageSize}">Next Page</a></span>
+        <span text-align="middle"><a th:if="${[=model.name]List.number < [=model.name]List.totalPages-1}" th:href="@{'?pageNo='} + ${pageNo+1} + '&pageSize=' + ${pageSize}">Next Page</a></span>
 [/#if]
 [/#macro]
 
