@@ -13,21 +13,25 @@ public class ConsoleApp {
 
     public static final String PATH = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
 
-    public static final String DESTINATION = "D:\\Workspace\\Test-Project\\src\\main\\java\\com\\project\\";
+    public static final String DESTINATION_JAVA = "D:\\Workspace\\Test-Project\\src\\main\\java\\com\\project\\";
 
     public static final File TEMPLATE_DIRECTORY = new File("D:\\Workspace\\Master\\XMLParser\\src\\main\\resources\\static");
 
     private static final String DESTINATION_THYMELEAF = "D:\\Workspace\\Test-Project\\src\\main\\resources\\templates\\";
 
     public static void main(String[] args) throws IOException, TemplateException, ParserConfigurationException, SAXException {
-        Loader loader = new Loader(PATH, DESTINATION, TEMPLATE_DIRECTORY);
-        loader.generateComponent(Component.ENTITY);
-        loader.generateComponent(Component.CONTROLLER);
-        loader.generateComponent(Component.REPOSITORY);
 
-        loader.setDestination(DESTINATION_THYMELEAF);
-        loader.generateComponent(Component.LIST);
-        loader.generateComponent(Component.FORM);
-        loader.generateIndex();
+        // Load Java templates
+        Loader javaLoader = new Loader(PATH, DESTINATION_JAVA, TEMPLATE_DIRECTORY);
+        javaLoader.generateComponent(Component.ENTITY);
+        javaLoader.generateComponent(Component.CONTROLLER);
+        javaLoader.generateComponent(Component.REPOSITORY);
+        javaLoader.generateComponent(Component.SERVICE);
+
+        // Load Thymeleaf templates
+        Loader thymeleafLoader = new Loader(PATH, DESTINATION_THYMELEAF, TEMPLATE_DIRECTORY);
+        thymeleafLoader.generateComponent(Component.LIST);
+        thymeleafLoader.generateComponent(Component.FORM);
+        thymeleafLoader.generateIndex();
     }
 }

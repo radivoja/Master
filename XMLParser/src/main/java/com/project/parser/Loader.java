@@ -63,19 +63,36 @@ public class Loader {
 
     private Writer chooseComponent(Component component, Model model) throws IOException {
         String componentName = component.toString().toLowerCase();
-        if(component.equals(Component.CONTROLLER)) {
-            return new FileWriter(destination + componentName + "\\" + StringUtils.capitalize(model.getName()) + StringUtils.capitalize(componentName) + ".java");
-        } else if (component.equals(Component.LIST) || component.equals(Component.FORM)) {
-            return new FileWriter(destination + model.getName() + StringUtils.capitalize(componentName) + ".html");
-        } else {
-            if((component.equals(Component.ENTITY))){
-                return new FileWriter(destination + "entities"+  "\\" + StringUtils.capitalize(model.getName()) +  ".java");
-            } else {
-                return new FileWriter(destination + "repositories" + "\\" + StringUtils.capitalize(model.getName()) + StringUtils.capitalize(componentName) + ".java");
-            }
-        }
-    }
+        String path;
 
+        if (component.equals(Component.CONTROLLER)) {
+            path = destination + componentName + "\\" +
+                    StringUtils.capitalize(model.getName()) +
+                    StringUtils.capitalize(componentName) + ".java";
+        } else if (component.equals(Component.LIST) || component.equals(Component.FORM)) {
+            path = destination + model.getName() +
+                    StringUtils.capitalize(componentName) + ".html";
+        } else if (component.equals(Component.REPOSITORY)) {
+            path = destination + "repositories\\" +
+                    StringUtils.capitalize(model.getName()) +
+                    StringUtils.capitalize(componentName) + ".java";
+        } else if (component.equals(Component.ENTITY)) {
+            path = destination + "entities\\" +
+                    StringUtils.capitalize(model.getName()) + ".java";
+        } else  {
+            path = destination + "service\\" +
+                    StringUtils.capitalize(model.getName()) +
+                    StringUtils.capitalize(componentName) + ".java";
+        }
+  
+        File file = new File(path);
+        File parent = file.getParentFile();
+        if (!parent.exists()) {
+            parent.mkdirs();  
+        }
+
+        return new FileWriter(file);
+    }
     public void generateIndex() throws ParserConfigurationException, IOException, SAXException, TemplateException {
         Template temp = configuration.getTemplate( "index.ftlh");
         Map<String, Object> map = new HashMap<>();
