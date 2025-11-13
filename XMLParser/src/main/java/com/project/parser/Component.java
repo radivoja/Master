@@ -6,5 +6,6 @@ public enum Component {
 	REPOSITORY,
 	LIST,
 	FORM,
-	SERVICE
+	SERVICE,
+    DAO
 }

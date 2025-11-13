@@ -1,9 +1,13 @@
-package com.project.entities;
+package com.project.dao;
 import java.util.List;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
-public class [=model.name?cap_first] {
+
+public class [=model.name?cap_first]Dao {
 [@printProperty/]
 [@printAccessor/]
     @Override
@@ -14,10 +18,34 @@ public class [=model.name?cap_first] {
 [#-- Print properties --]
 [#macro printProperty]
     [#list model.properties as property]
-	[=relationship(property)][#if property.name?lower_case == 'id']@Id[/#if]
+	[=relationship(property)][#if property.name?lower_case == 'id']@NotNull[/#if]
+	[@printValidation property=property/]
     private [=property.type?no_esc] [=property.name?uncap_first];
     [/#list]
 	
+[/#macro]
+
+
+[#macro printValidation property]
+	[#list property.stereotypes as stereo]
+		[#if stereo.name == 'MyMetaModel:EntityProperty']
+			[#if property.type == 'String']
+	@NotBlank
+				[#if stereo.maxLenght?? && stereo.minLenght??]
+		@Size([=stereo.minLength]??, [=stereo.maxLenght]??)
+				[/#if]
+			[/#if]
+			[#if property.type =='Integer']
+	@NotNull
+				[#if stereo.maxLenght??]
+		@Max([=stereo.maxLenght])
+				[/#if]
+				[#if stereo.minLenght??]
+		@Min([=stereo.minLenght])
+				[/#if]
+			[/#if]
+		[/#if]
+	[/#list]
 [/#macro]
 
 [#-- Print getters and setters --]

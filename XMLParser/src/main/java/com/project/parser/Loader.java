@@ -79,10 +79,14 @@ public class Loader {
         } else if (component.equals(Component.ENTITY)) {
             path = destination + "entities\\" +
                     StringUtils.capitalize(model.getName()) + ".java";
-        } else  {
+        } else if (component.equals(Component.SERVICE)) {
             path = destination + "service\\" +
                     StringUtils.capitalize(model.getName()) +
                     StringUtils.capitalize(componentName) + ".java";
+        } else {
+            path = destination + "dao\\" +
+                    StringUtils.capitalize(model.getName()) + 
+					StringUtils.capitalize(componentName) + ".java";
         }
   
         File file = new File(path);

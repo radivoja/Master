@@ -27,6 +27,7 @@ public class ConsoleApp {
         javaLoader.generateComponent(Component.CONTROLLER);
         javaLoader.generateComponent(Component.REPOSITORY);
         javaLoader.generateComponent(Component.SERVICE);
+        javaLoader.generateComponent(Component.DAO);
 
         // Load Thymeleaf templates
         Loader thymeleafLoader = new Loader(PATH, DESTINATION_THYMELEAF, TEMPLATE_DIRECTORY);
