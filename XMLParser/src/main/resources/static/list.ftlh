@@ -35,7 +35,10 @@
             <thead>
                 <tr>
 [#list item.properties as property]
+    [#-- Only show non-OneToMany/ManyToMany properties in list view --]
+    [#if !property.relationship?? || property.relationship == 'ManyToOne']
 				    <th> [=property.name] </th>
+    [/#if]
 [/#list]
 				    <th> Edit </th>
 				    <th> Delete </th>
@@ -47,20 +50,23 @@
 [#macro tableBody item]
 		    <tbody>
 				<tr th:each="[=item.name] : ${[=item.name]List}">
-[@linkedEntity item=model/]
+[@displayProperties item=model/]
 [@editLink item=model/]
 [@delete item=model/]
 				<tr>
 			</tbody>
 [/#macro]
 
-[#-- Check if theres exist composite element and writes his link  --]
-[#macro linkedEntity item]
-		[#list item.properties as property]
-    [#if property.relationship?exists && property.relationship == 'ManyToOne']
-        <td> <a th:href="@{/[=property.name]Edit/{id}(id=${[=item.name]?.[=property.name].id})} "> <div th:text="${[=item.name]?.[=property.name]}"></div> </a></td>
-    [#else]
-        			<td th:text="${[=item.name].[=property.name]}"></td>
+[#-- Display properties --]
+[#macro displayProperties item]
+[#list item.properties as property]
+    [#if !property.relationship??]
+        [#-- Regular property: just display it --]
+        			<td th:text="${[=item.name].[=property.name?uncap_first]}"></td>
+    [#elseif property.relationship == 'ManyToOne']
+        [#-- ManyToOne: DAO has the ID, display as link or just the ID --]
+        			<td th:text="${[=item.name].[=property.name?uncap_first]Id}"></td>
+    [#-- Skip OneToMany and ManyToMany relationships in list view --]
     [/#if]
 [/#list]
 [/#macro]
@@ -74,6 +80,3 @@
 [#macro delete item]
 					<td><a th:href="@{/delete[=item.name?cap_first](id=${[=item.name].id})}"> Delete </a></td>
 [/#macro]
-
-
-

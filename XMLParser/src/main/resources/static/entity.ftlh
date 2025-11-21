@@ -14,7 +14,7 @@ public class [=model.name?cap_first] {
 [#-- Print properties --]
 [#macro printProperty]
     [#list model.properties as property]
-	[=relationship(property)][#if property.name?lower_case == 'id']@Id[/#if]
+	[=checkRelationship(property)][#if property.name?uncap_first == 'id']@Id[/#if]
     private [=property.type?no_esc] [=property.name?uncap_first];
     [/#list]
 	
@@ -34,11 +34,11 @@ public class [=model.name?cap_first] {
 [/#macro]
 
 [#-- Relationship checking--]
-[#function relationship property]
+[#function checkRelationship property]
     [#if property.relationship??]
         [#assign relation =  '@' + property.relationship]
         [#if property.mappedBy??]
-            [#return '\n' + '\t' + relation + '(mappedBy="'?no_esc + property.mappedBy?lower_case+ '")'?no_esc]
+            [#return '\n' + '\t' + relation + '(mappedBy="'?no_esc + property.mappedBy?uncap_first+ '")'?no_esc]
         [/#if]
         [#return relation]
     [#else]
@@ -63,5 +63,5 @@ public class [=model.name?cap_first] {
         [#return retValue + ";"]
      [/#if]
 
-      [#return '"'?no_esc + model.name+ ':"+'?no_esc  + model.properties[0].name + ";"]
+      [#return '"'?no_esc + model.name+ ':"+'?no_esc  + model.properties[0].name?uncap_first + ";"]
 [/#function]

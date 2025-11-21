@@ -7,5 +7,6 @@ public enum Component {
 	LIST,
 	FORM,
 	SERVICE,
-    DAO
+    DAO,
+    MAPPER
 }

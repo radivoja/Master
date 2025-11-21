@@ -73,7 +73,7 @@ public class Loader {
             path = destination + model.getName() +
                     StringUtils.capitalize(componentName) + ".html";
         } else if (component.equals(Component.REPOSITORY)) {
-            path = destination + "repositories\\" +
+            path = destination + "repository\\" +
                     StringUtils.capitalize(model.getName()) +
                     StringUtils.capitalize(componentName) + ".java";
         } else if (component.equals(Component.ENTITY)) {
@@ -83,7 +83,12 @@ public class Loader {
             path = destination + "service\\" +
                     StringUtils.capitalize(model.getName()) +
                     StringUtils.capitalize(componentName) + ".java";
-        } else {
+        } else if (component.equals(Component.MAPPER)) {
+            path = destination + "mapper\\" +
+                    StringUtils.capitalize(model.getName()) +
+                    StringUtils.capitalize(componentName) + ".java";
+        }
+        else {
             path = destination + "dao\\" +
                     StringUtils.capitalize(model.getName()) + 
 					StringUtils.capitalize(componentName) + ".java";
