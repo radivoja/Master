@@ -82,7 +82,7 @@ public class [=model.name?cap_first]Controller {
 
 	// 2.2 Post Form
 	@PostMapping("/[=model.name]Form")
-	public String formPost(Model model, @Valid [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult) {
+	public String formPost(Model model, @Valid @ModelAttribute("[=model.name]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult) {
 		[#list model.properties as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
@@ -91,12 +91,6 @@ public class [=model.name?cap_first]Controller {
 	    if(bindingResult.hasErrors()){
 			return "[=model.name]Form";
 		}
-
-		if([=model.name]Service.hasId([=model.name].getId())) {
-		    bindingResult.addError(new FieldError("[=model.name]", "Id", "Id already in use"));
-		    [=model.name].setId(null);
-            return "[=model.name]Form";
-        }
 
         [=model.name]Service.save[=model.name?cap_first]([=model.name]);
 		return "redirect:/[=model.name]List";
@@ -120,7 +114,7 @@ public class [=model.name?cap_first]Controller {
 
     // 3.2 Post Edit Form
     @PostMapping("[=model.name]Form/{[=model.name]Id}/edit")
-    public String formUpdatePost(Model model, @Valid [=model.name?cap_first]Dao [=model.name], @PathVariable("[=model.name]Id") int [=model.name]Id, BindingResult bindingResult){
+    public String formUpdatePost(Model model, @Valid @ModelAttribute("[=model.name]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult, @PathVariable("[=model.name]Id") int [=model.name]Id){
 		[#list model.properties as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());

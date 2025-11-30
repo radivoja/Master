@@ -14,7 +14,8 @@ public class [=model.name?cap_first] {
 [#-- Print properties --]
 [#macro printProperty]
     [#list model.properties as property]
-	[=checkRelationship(property)][#if property.name?uncap_first == 'id']@Id[/#if]
+	[=checkRelationship(property)][#if property.name?uncap_first == 'id']@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)[/#if]
     private [=property.type?no_esc] [=property.name?uncap_first];
     [/#list]
 	

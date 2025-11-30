@@ -32,15 +32,10 @@
 
 [#-- Id macro  --]
 [#macro idMacro]
-			<div class="form-group row">
+			<div class="form-group row" th:if="${[=model.name].id != null}">
 				<label class="col-2 col-form-label">Id</label>
-				    <th:block th:if="${[=model.name].id == null}">
-					    <input type="text" th:field="*{id}">
-				    </th:block>
-				<th:block th:unless="${[=model.name].id == null}">
-					<input type="hidden" th:text="${[=model.name].id}" th:field="*{id}" />
-				</th:block>
-				<div style="margin-left:20px;" th:if="${#fields.hasErrors('id')}" th:errors="*{id}"> Error</div>
+				<span th:text="${[=model.name].id}" style="padding: 7px 0;"></span>
+				<input type="hidden" th:field="*{id}"/>
 			</div>
 [/#macro]
 
