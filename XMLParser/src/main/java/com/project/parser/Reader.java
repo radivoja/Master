@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class XMIParser extends DefaultHandler {
+public class Reader extends DefaultHandler {
 
     private Map<String, Model> models = new HashMap<>();
     private List<Stereotype> stereotypes = new ArrayList<>();

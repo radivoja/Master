@@ -47,9 +47,9 @@ public class Loader {
     private Collection<Model> getModel() throws ParserConfigurationException, SAXException, IOException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
-        XMIParser xmiParser = new XMIParser();
-        saxParser.parse(path, xmiParser);
-        return xmiParser.getModels().values();
+        Reader reader = new Reader();
+        saxParser.parse(path, reader);
+        return reader.getModels().values();
     }
     public void generateComponent(Component component) throws ParserConfigurationException, IOException, SAXException, TemplateException {
         Map<String, Object> map = new HashMap<>();
