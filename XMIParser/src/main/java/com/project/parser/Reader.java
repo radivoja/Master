@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Reader extends DefaultHandler {
+import static com.project.parser.XmiConstants.*;
 
+public class Reader extends DefaultHandler {
     private Map<String, Model> models = new HashMap<>();
     private List<Stereotype> stereotypes = new ArrayList<>();
     private List<Property> propertiesList;
-    private  Property property;
-
+    private Property property;
+    private final XmiToJavaTypeMapper typeMapper = new XmiToJavaTypeMapper();
 
     @Override
     public void startDocument() throws SAXException {
@@ -59,33 +60,25 @@ public class Reader extends DefaultHandler {
 
         // Property type
         if (qName.equals("type")) {
-            property.setType(getType(attributes));
+            property.setType(typeMapper.map(attributes.getValue("href")));
         }
 
         // Stereotypes
-        if (checkStereotype(qName)) {
+        if(StereotypeName.contains(qName)) {
             Stereotype stereotype = parseStereotype(qName, attributes);
             stereotypes.add(stereotype);
         }
     }
 
     public boolean checkModel(String qName, Attributes attributes) {
-        if (qName.equals("packagedElement") && (attributes.getValue("xmi:type").equals(UML_CLASS))) {
+        if (qName.equals("packagedElement") && (attributes.getValue(XMI_TYPE).equals(UML_CLASS))) {
             return true;
         }
         return false;
     }
 
     public boolean checkProperty(String qName, Attributes attributes) {
-        if (qName.equals("ownedAttribute") && attributes.getValue("xmi:type").equals("uml:Property")) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean checkStereotype(String qName) {
-        if (qName.equals(STEREOTYPE_ENTITY) || qName.equals(STEREOTYPE_KEY) || qName.equals(STEREOTYPE_ENTITY_PROPERTY) ||
-                qName.equals(STEREOTYPE_TOSTRING) || qName.equals(STEREOTYPE_UNIQUE) || qName.equals(STEREOTYPE_COMMON) || qName.equals(STEREOTYPE_PAGEABLE)) {
+        if (qName.equals("ownedAttribute") && attributes.getValue(XMI_TYPE).equals(UML_PROPERTY)) {
             return true;
         }
         return false;
@@ -93,7 +86,7 @@ public class Reader extends DefaultHandler {
 
     public Model parseModel(Attributes attributes) {
         Model model = new Model();
-        model.setId(attributes.getValue("xmi:id"));
+        model.setId(attributes.getValue(XMI_ID));
         model.setName(attributes.getValue("name"));
         return model;
     }
@@ -104,13 +97,13 @@ public class Reader extends DefaultHandler {
 
         if (attributes.getValue(BASE_CLASS) != null) {
             stereotype.setBase(attributes.getValue(BASE_CLASS));
-            stereotype.setType("baseClass");
+            stereotype.setType(BASE_CLASS);
         } else {
             stereotype.setBase(attributes.getValue(BASE_PROPERTY));
-            stereotype.setType("baseProperty");
+            stereotype.setType(BASE_PROPERTY);
         }
 
-        stereotype.setId(attributes.getValue("xmi:id"));
+        stereotype.setId(attributes.getValue(XMI_ID));
 
         if(attributes.getValue("minLength") != null){
             stereotype.setMinLength(attributes.getValue("minLength"));
@@ -135,7 +128,7 @@ public class Reader extends DefaultHandler {
 
     public Property parseProperty(Attributes attributes) {
         Property property = new Property();
-        String id = attributes.getValue("xmi:id");
+        String id = attributes.getValue(XMI_ID);
         String name = attributes.getValue("name");
         property.setId(id);
         property.setName(name);
@@ -196,10 +189,10 @@ public class Reader extends DefaultHandler {
 
     public void sortStereotypeforEntity() {
         for(Stereotype stereotype : stereotypes){
-            if(stereotype.getType().equals("baseClass")){
+            if(stereotype.getType().equals(BASE_CLASS)){
                 Model model = models.get(stereotype.getBase());
                 model.setEntity(true);
-                if(stereotype.getName().equals(STEREOTYPE_PAGEABLE)){
+                if (StereotypeName.PAGEABLE.getQName().equals(stereotype.getName())) {
                     Pageable pageable = new Pageable();
                     pageable.setPageNo(stereotype.getPageNo());
                     pageable.setPageSize(stereotype.getPageSize());
@@ -269,43 +262,9 @@ public class Reader extends DefaultHandler {
         printWriter.close();
     }
 
-    private String getType(Attributes attributes) {
-        String type = attributes.getValue("href");
-        if (type.endsWith("String")) {
-            return "String";
-        }
-        if (type.endsWith("Integer")) {
-            return "Integer";
-        }
-        if (type.endsWith("ELong")) {
-            return "Long";
-        }
-        if (type.endsWith("EDate")) {
-            return "Date";
-        }
-        if (type.endsWith("EDouble") || type.endsWith("Double")) {
-            return "Double";
-        }
-
-        return type;
-    }
-
     public Map<String, Model> getModels() {
         return models.entrySet().
                 stream().filter(x -> x.getValue().isEntity())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
-
-    public static String STEREOTYPE_ENTITY = "MyMetaModel:Entity";
-    public static String STEREOTYPE_KEY = "MyMetaModel:Key";
-    public static String STEREOTYPE_TOSTRING = "MyMetaModel:ToString";
-
-    public static String STEREOTYPE_ENTITY_PROPERTY = "MyMetaModel:EntityProperty";
-    public static String STEREOTYPE_UNIQUE = "MyMetaModel:Unique";
-
-    public static String STEREOTYPE_COMMON = "MyMetaModel:Common";
-    public static String BASE_CLASS = "base_Class";
-    public static String BASE_PROPERTY = "base_Property";
-    public static String UML_CLASS = "uml:Class";
-    public static String STEREOTYPE_PAGEABLE = "MyMetaModel:Pageable";
 }

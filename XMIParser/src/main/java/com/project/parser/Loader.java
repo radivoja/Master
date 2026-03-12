@@ -28,12 +28,14 @@ public class Loader {
     private String destination;
     private File templateDirectory;
     private Configuration configuration;
+    private Collection<Model> models;
 
-    public Loader(String path, String destination, File templateDirectory) throws IOException {
+    public Loader(String path, String destination, File templateDirectory) throws IOException, ParserConfigurationException, SAXException {
         this.path = path;
         this.destination = destination;
         this.templateDirectory = templateDirectory;
         configuration = setConfiguration();
+        this.models = getModel();
     }
 
     private Configuration setConfiguration() throws IOException {
@@ -51,10 +53,11 @@ public class Loader {
         saxParser.parse(path, reader);
         return reader.getModels().values();
     }
-    public void generateComponent(Component component) throws ParserConfigurationException, IOException, SAXException, TemplateException {
+
+    public void generateComponent(Component component) throws IOException, TemplateException {
         Map<String, Object> map = new HashMap<>();
         Template temp = configuration.getTemplate(component.toString().toLowerCase() + ".ftlh");
-        for(Model model : getModel()) {
+        for(Model model : models) {
             Writer fileOut = chooseComponent(component, model);
             map.put("model", model);
             temp.process(map, fileOut);
@@ -62,55 +65,22 @@ public class Loader {
     }
 
     private Writer chooseComponent(Component component, Model model) throws IOException {
-        String componentName = component.toString().toLowerCase();
-        String path;
+        String modelName = StringUtils.capitalize(model.getName());
+        String fileName  = modelName + component.getSuffix() + component.getExtension();
+        String fullPath  = destination + component.getSubfolder() + fileName;
 
-        if (component.equals(Component.CONTROLLER)) {
-            path = destination + componentName + "\\" +
-                    StringUtils.capitalize(model.getName()) +
-                    StringUtils.capitalize(componentName) + ".java";
-        } else if (component.equals(Component.LIST) || component.equals(Component.FORM)) {
-            path = destination + model.getName() +
-                    StringUtils.capitalize(componentName) + ".html";
-        } else if (component.equals(Component.REPOSITORY)) {
-            path = destination + "repository\\" +
-                    StringUtils.capitalize(model.getName()) +
-                    StringUtils.capitalize(componentName) + ".java";
-        } else if (component.equals(Component.ENTITY)) {
-            path = destination + "entities\\" +
-                    StringUtils.capitalize(model.getName()) + ".java";
-        } else if (component.equals(Component.SERVICE)) {
-            path = destination + "service\\" +
-                    StringUtils.capitalize(model.getName()) +
-                    StringUtils.capitalize(componentName) + ".java";
-        } else if (component.equals(Component.MAPPER)) {
-            path = destination + "mapper\\" +
-                    StringUtils.capitalize(model.getName()) +
-                    StringUtils.capitalize(componentName) + ".java";
+        File file = new File(fullPath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
         }
-        else {
-            path = destination + "dao\\" +
-                    StringUtils.capitalize(model.getName()) + 
-					StringUtils.capitalize(componentName) + ".java";
-        }
-  
-        File file = new File(path);
-        File parent = file.getParentFile();
-        if (!parent.exists()) {
-            parent.mkdirs();  
-        }
-
         return new FileWriter(file);
     }
-    public void generateIndex() throws ParserConfigurationException, IOException, SAXException, TemplateException {
+
+    public void generateIndex() throws IOException, TemplateException {
         Template temp = configuration.getTemplate( "index.ftlh");
         Map<String, Object> map = new HashMap<>();
         Writer fileOut = new FileWriter(destination + "index.html");
-        map.put("models", getModel());
+        map.put("models", models);
         temp.process(map, fileOut);
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
     }
 }
