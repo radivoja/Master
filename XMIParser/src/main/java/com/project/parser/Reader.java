@@ -8,10 +8,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -211,7 +208,7 @@ public class Reader extends DefaultHandler {
 
         sortStereotypeforEntity();
         try {
-            printInfo();
+            Printer.printInfo(models);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -233,36 +230,8 @@ public class Reader extends DefaultHandler {
                 .orElse(null);
     }
 
-    // Testing methhod
-    private void printInfo() throws IOException {
-        String fileName = "C:\\Users\\Aleksandar\\Desktop\\testGenerated.txt";
-        File file = new File(fileName);
-        boolean exist = file.exists();
-        if(!exist){
-            file.createNewFile();
-        }
-        PrintWriter printWriter = new PrintWriter(new FileWriter(fileName));
-        for (Model model : models.values()) {
-            printWriter.println(model.getName() + " " + model.getId());
-        }
-        printWriter.println();
-        for (Model model : models.values()) {
-            for(Property property : model.getProperties()){
-                if(property.getStereotypes().size() > 0){
-                    printWriter.print(model.getName() + " " + property.getName()+ "--->");
-                    for(Stereotype stereotype : property.getStereotypes()) {
-                        printWriter.print(stereotype.getName()+ ", ");
-                    }
-                    printWriter.println();
-                    printWriter.println();
-                }
-            }
 
-        }
-        printWriter.close();
-    }
-
-    public Map<String, Model> getModels() {
+    public Map<String, Model> getEntityModels() {
         return models.entrySet().
                 stream().filter(x -> x.getValue().isEntity())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
