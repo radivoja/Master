@@ -1,12 +1,12 @@
 package com.project.gui;
 
 import com.project.parser.Component;
+import com.project.parser.Generator;
 import com.project.parser.Loader;
 import freemarker.template.TemplateException;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
 import java.io.IOException;
 
 public class ConsoleApp {
@@ -15,25 +15,26 @@ public class ConsoleApp {
 
     public static final String DESTINATION_JAVA = "D:\\Workspace\\Test-Project\\src\\main\\java\\com\\project\\";
 
-    public static final File TEMPLATE_DIRECTORY = new File("D:\\Workspace\\Master\\XMLParser\\src\\main\\resources\\static");
-
     private static final String DESTINATION_THYMELEAF = "D:\\Workspace\\Test-Project\\src\\main\\resources\\templates\\";
 
     public static void main(String[] args) throws IOException, TemplateException, ParserConfigurationException, SAXException {
 
         // Load Java templates
-        Loader javaLoader = new Loader(PATH, DESTINATION_JAVA, TEMPLATE_DIRECTORY);
-        javaLoader.generateComponent(Component.ENTITY);
-        javaLoader.generateComponent(Component.CONTROLLER);
-        javaLoader.generateComponent(Component.REPOSITORY);
-        javaLoader.generateComponent(Component.SERVICE);
-        javaLoader.generateComponent(Component.DAO);
-        javaLoader.generateComponent(Component.MAPPER);
+        Generator javaGenerator = new Generator(PATH, DESTINATION_JAVA);
+        javaGenerator.generateComponent(Component.ENTITY);
+        javaGenerator.generateComponent(Component.CONTROLLER);
+        javaGenerator.generateComponent(Component.REPOSITORY);
+        javaGenerator.generateComponent(Component.SERVICE);
+        javaGenerator.generateComponent(Component.DAO);
+        javaGenerator.generateComponent(Component.MAPPER);
 
         // Load Thymeleaf templates
-        Loader thymeleafLoader = new Loader(PATH, DESTINATION_THYMELEAF, TEMPLATE_DIRECTORY);
-        thymeleafLoader.generateComponent(Component.LIST);
-        thymeleafLoader.generateComponent(Component.FORM);
-        thymeleafLoader.generateIndex();
+        Generator thymeleafGenerator = new Generator(PATH, DESTINATION_THYMELEAF);
+        thymeleafGenerator.generateComponent(Component.LIST);
+        thymeleafGenerator.generateComponent(Component.FORM);
+
+        Generator indexGenerator = new Generator(PATH, DESTINATION_THYMELEAF);
+
+        indexGenerator.generateIndex();
     }
 }
