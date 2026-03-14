@@ -9,7 +9,9 @@ public enum Component {
     DAO        ("dao\\",         "Dao",        ".java"),
     MAPPER     ("mapper\\",      "Mapper",     ".java"),
     LIST       ("",              "List",       ".html"),
-    FORM       ("",              "Form",       ".html");
+    FORM       ("",              "Form",       ".html"),
+    INDEX      ("",              "index",      ".html");
+
 
     private final String subfolder;
     private final String suffix;
