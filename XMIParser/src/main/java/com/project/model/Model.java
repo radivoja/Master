@@ -7,6 +7,9 @@ public class Model {
     private String id;
     private String name;
     private boolean isEntity;
+    private boolean formView;
+    private boolean listView;
+    private String uri;
     private Pageable pageable;
     private List<Property> properties = new ArrayList<>();
     public String getId() {
@@ -47,5 +50,26 @@ public class Model {
 
     public void setPageable(Pageable pageable) {
         this.pageable = pageable;
+    }
+
+    public String getUri() {
+        return uri;
+    }
+    public void setUri(String uri) {
+        this.uri = uri;
+    }
+
+    public boolean isFormView() {
+        return formView;
+    }
+    public void setFormView(boolean formView) {
+        this.formView = formView;
+    }
+    public boolean isListView() {
+        return listView;
+    }
+
+    public void setListView(boolean listView) {
+        this.listView = listView;
     }
 }

@@ -1,4 +1,4 @@
-package com.project.dao;
+package [=model.uri].dao;
 import java.util.List;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;

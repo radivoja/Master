@@ -5,7 +5,6 @@ import com.project.model.Pageable;
 import com.project.model.Property;
 import com.project.model.Stereotype;
 import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.io.IOException;
@@ -23,25 +22,30 @@ public class Reader extends DefaultHandler {
     private List<Property> propertiesList;
     private Property property;
     private final XmiToJavaTypeMapper typeMapper = new XmiToJavaTypeMapper();
+    private String modelUri;
 
     @Override
-    public void startDocument() throws SAXException {
-        super.startDocument();
+    public void startDocument() {
     }
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
 
+        if(qName.equals(UML_MODEL)){
+            modelUri = attributes.getValue(XMI_MODEL_URI);
+        }
+
         // Initialize the model object
-        if (checkModel(qName, attributes)) {
+        if (isUmlClass(qName, attributes)) {
             Model model = parseModel(attributes);
             propertiesList = new ArrayList<>();
             model.setProperties(propertiesList);
+
             models.put(model.getId(), model);
         }
 
         // Initialize the properties
-        if (checkProperty(qName, attributes)) {
+        if (isUmlProperty(qName, attributes)) {
             property = parseProperty(attributes);
             propertiesList.add(property);
         }
@@ -65,17 +69,21 @@ public class Reader extends DefaultHandler {
             Stereotype stereotype = parseStereotype(qName, attributes);
             stereotypes.add(stereotype);
         }
+
+
     }
 
-    public boolean checkModel(String qName, Attributes attributes) {
-        if (qName.equals("packagedElement") && (attributes.getValue(XMI_TYPE).equals(UML_CLASS))) {
+    public boolean isUmlClass(String qName, Attributes attributes) {
+        if (qName.equals(XMI_PACKAGED_ELEMENT)
+                && (attributes.getValue(XMI_TYPE).equals(UML_CLASS)))
+        {
             return true;
         }
         return false;
     }
 
-    public boolean checkProperty(String qName, Attributes attributes) {
-        if (qName.equals("ownedAttribute") && attributes.getValue(XMI_TYPE).equals(UML_PROPERTY)) {
+    public boolean isUmlProperty(String qName, Attributes attributes) {
+        if (qName.equals(XMI_OWNER_ATTRIBUTE) && attributes.getValue(XMI_TYPE).equals(UML_PROPERTY)) {
             return true;
         }
         return false;
@@ -84,7 +92,8 @@ public class Reader extends DefaultHandler {
     public Model parseModel(Attributes attributes) {
         Model model = new Model();
         model.setId(attributes.getValue(XMI_ID));
-        model.setName(attributes.getValue("name"));
+        model.setName(attributes.getValue(XMI_MODEL_NAME));
+        model.setUri(modelUri);
         return model;
     }
 
@@ -232,8 +241,12 @@ public class Reader extends DefaultHandler {
 
 
     public Map<String, Model> getEntityModels() {
-        return models.entrySet().
+      /*  return models.entrySet().
                 stream().filter(x -> x.getValue().isEntity())
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+       */
+
+        return  models;
     }
 }

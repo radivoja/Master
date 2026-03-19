@@ -1,10 +1,10 @@
-package com.project.mapper;
+package [=model.uri].mapper;
 
-import com.project.dao.[=model.name?cap_first]Dao;
-import com.project.entities.[=model.name?cap_first];
+import [=model.uri].dao.[=model.name?cap_first]Dao;
+import [=model.uri].entities.[=model.name?cap_first];
 [#list model.properties as property]
 [#if property.relationship?? && property.relationship != "ManyToOne"]
-import com.project.entities.[=property.type?replace("List<","")?replace(">","")];
+import [=model.uri].entities.[=property.type?replace("List<","")?replace(">","")];
 [/#if]
 [/#list]
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class [=model.name?cap_first]Mapper {
 
 [#else]
         if (entity.get[=property.name?cap_first]() != null) {
-            List<Integer> [=property.name?lower_case]Ids = entity.get[=property.name?cap_first]().stream()
+            List<[=property.type]> [=property.name?lower_case]Ids = entity.get[=property.name?cap_first]().stream()
                     .map([=property.type?replace("List<","")?replace(">","")]::getId)
                     .collect(Collectors.toList());
             dao.set[=property.name?cap_first]Ids([=property.name?lower_case]Ids);

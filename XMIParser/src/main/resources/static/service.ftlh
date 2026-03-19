@@ -1,9 +1,9 @@
-package com.project.service;
+package [=model.uri].service;
 
-import com.project.dao.[=model.name?cap_first]Dao;
-import com.project.entities.[=model.name?cap_first];
-import com.project.repository.[=model.name?cap_first]Repository;
-import com.project.mapper.[=model.name?cap_first]Mapper;
+import [=model.uri].dao.[=model.name?cap_first]Dao;
+import [=model.uri].entities.[=model.name?cap_first];
+import [=model.uri].repository.[=model.name?cap_first]Repository;
+import [=model.uri].mapper.[=model.name?cap_first]Mapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;

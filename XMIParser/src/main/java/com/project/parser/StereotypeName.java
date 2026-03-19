@@ -1,13 +1,15 @@
 package com.project.parser;
 
 public enum StereotypeName {
-    ENTITY(XmiConstants.MY_META_MODEL_PROFILE + ":Entity"),
-    KEY(XmiConstants.MY_META_MODEL_PROFILE + ":Key"),
-    ENTITY_PROPERTY(XmiConstants.MY_META_MODEL_PROFILE + ":EntityProperty"),
-    TO_STRING(XmiConstants.MY_META_MODEL_PROFILE + ":ToString"),
-    UNIQUE(XmiConstants.MY_META_MODEL_PROFILE + ":Unique"),
-    COMMON(XmiConstants.MY_META_MODEL_PROFILE + ":Common"),
-    PAGEABLE(XmiConstants.MY_META_MODEL_PROFILE + ":Pageable");
+    ENTITY(XmiConstants.PROFILE + ":Entity"),
+    KEY(XmiConstants.PROFILE + ":Key"),
+    ENTITY_PROPERTY(XmiConstants.PROFILE + ":EntityProperty"),
+    TO_STRING(XmiConstants.PROFILE + ":ToString"),
+    UNIQUE(XmiConstants.PROFILE + ":Unique"),
+    COMMON(XmiConstants.PROFILE + ":Common"),
+    PAGEABLE(XmiConstants.PROFILE + ":Pageable"),
+    MVC_PROPERTY(XmiConstants.PROFILE + ":MVCProperty"),
+    MVC_FORM(XmiConstants.PROFILE + ":MVCForm");
 
     private final String qName;
 
@@ -20,6 +22,7 @@ public enum StereotypeName {
     }
 
     public static boolean contains(String qName) {
+
         for (StereotypeName type : values()) {
             if (type.qName.equals(qName)) {
                 return true;

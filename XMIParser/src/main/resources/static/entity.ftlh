@@ -1,4 +1,4 @@
-package com.project.entities;
+package [=model.uri].entities;
 import java.util.List;
 import jakarta.persistence.*;
 

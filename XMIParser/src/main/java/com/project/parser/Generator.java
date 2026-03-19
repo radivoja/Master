@@ -15,18 +15,21 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.project.parser.TestConstants.JAVA_ROOT;
+import static com.project.parser.TestConstants.TEMPLATE_ROOT;
 import static com.project.parser.XmiConstants.*;
 
 public class Generator {
     private Loader loader = new Loader();
     private XmiReader xmiReader = new XmiReader();
     private String umlPath;
-    private String destination;
+    private String projectRoot;
     private Collection<Model> models;
 
-    public Generator(String umlPath, String destination) throws IOException, ParserConfigurationException, SAXException {
+
+    public Generator(String umlPath, String projectRoot) throws IOException, ParserConfigurationException, SAXException {
         this.umlPath = umlPath;
-        this.destination = destination;
+        this.projectRoot = ensureEndsWithSlash(projectRoot);
         this.models = xmiReader.getModels(umlPath);
     }
 
@@ -34,29 +37,70 @@ public class Generator {
         Map<String, Object> map = new HashMap<>();
         Template template = loader.loadTemplate(component);
         for(Model model : models) {
-            Writer fileOut = chooseComponents(component, model);
+            if (component.equals(Component.FORM) && !(model.isFormView())){
+                return;
+            }
+
+            if (component.equals(Component.LIST) && !(model.isListView())){
+                return;
+            }
+
+
+            Writer fileOut = createWriter(component, model);
             map.put(MODEL, model);
             template.process(map, fileOut);
         }
     }
 
-    public void generateIndex() throws IOException, TemplateException, ParserConfigurationException, SAXException {
+    public void generateIndex() throws IOException, TemplateException {
         Template template = loader.loadTemplate(Component.INDEX);
         Map<String, Object> map = new HashMap<>();
-        Writer fileOut = new FileWriter(destination + INDEX + HTML);
-        map.put(MODELS, xmiReader.getModels(umlPath));
-        template.process(map, fileOut);
+
+        String fullPath = projectRoot + TEMPLATE_ROOT + INDEX + HTML;
+        File file = new File(fullPath);
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
+        try (Writer fileOut = new FileWriter(file)) {
+            map.put(MODELS, models);
+            template.process(map, fileOut);
+        }
     }
 
-    private Writer chooseComponents(Component component, Model model) throws IOException {
+    private Writer createWriter(Component component, Model model) throws IOException {
         String modelName = StringUtils.capitalize(model.getName());
         String fileName = modelName + component.getSuffix() + component.getExtension();
-        String fullPath = destination + component.getSubfolder() + fileName;
+
+
+        String basePath = resolveBasePath(component);
+        String fullPath = basePath + component.getSubfolder() + fileName;
 
         File file = new File(fullPath);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
         }
         return new FileWriter(file);
+    }
+
+
+    private String resolveBasePath(Component component) {
+        if (isTemplateComponent(component)) {
+            return projectRoot + TEMPLATE_ROOT;
+        }
+        return projectRoot + JAVA_ROOT;
+    }
+
+    private boolean isTemplateComponent(Component component) {
+        return component == Component.LIST
+                || component == Component.FORM
+                || component == Component.INDEX;
+    }
+
+    private String ensureEndsWithSlash(String path) {
+        if (path.endsWith("\\") || path.endsWith("/")) {
+            return path;
+        }
+        return path + "\\";
     }
 }

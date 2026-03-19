@@ -1,13 +1,14 @@
-package com.project.controller;
+package [=model.uri].controller;
+
 
 import java.util.Optional;
 
-import com.project.dao.[=model.name?cap_first]Dao;
-import com.project.service.[=model.name?cap_first]Service;
+import [=model.uri].dao.[=model.name?cap_first]Dao;
+import [=model.uri].service.[=model.name?cap_first]Service;
 [#list model.properties as property]
 	[#if checkManyToOne(property)]
-import com.project.service.[=property.name?cap_first]Service;
-import com.project.dao.[=property.name?cap_first]Dao;
+import [=model.uri].service.[=property.name?cap_first]Service;
+import [=model.uri].dao.[=property.name?cap_first]Dao;
 	[/#if]
 [/#list]
 import org.springframework.stereotype.Controller;
