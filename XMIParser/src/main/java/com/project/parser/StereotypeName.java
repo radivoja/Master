@@ -1,20 +1,21 @@
 package com.project.parser;
 
 public enum StereotypeName {
-    ENTITY(XmiConstants.PROFILE + ":Entity"),
-    KEY(XmiConstants.PROFILE + ":Key"),
-    ENTITY_PROPERTY(XmiConstants.PROFILE + ":EntityProperty"),
-    TO_STRING(XmiConstants.PROFILE + ":ToString"),
-    UNIQUE(XmiConstants.PROFILE + ":Unique"),
-    COMMON(XmiConstants.PROFILE + ":Common"),
-    PAGEABLE(XmiConstants.PROFILE + ":Pageable"),
-    MVC_PROPERTY(XmiConstants.PROFILE + ":MVCProperty"),
-    MVC_FORM(XmiConstants.PROFILE + ":MVCForm");
+    ENTITY("Entity"),
+    KEY("Key"),
+    ENTITY_PROPERTY("EntityProperty"),
+    TO_STRING("ToString"),
+    UNIQUE("Unique"),
+    COMMON("Common"),
+    MVC_PROPERTY("MVCProperty"),
+    ID("Id"),
+    MVC_LIST("MVCList"),
+    MVC_FORM("MVCForm");
 
     private final String qName;
 
-    StereotypeName(String qName) {
-        this.qName = qName;
+    StereotypeName(String localName) {
+        this.qName = XmiConstants.PROFILE + ":" + localName;
     }
 
     public String getQName() {
@@ -22,7 +23,6 @@ public enum StereotypeName {
     }
 
     public static boolean contains(String qName) {
-
         for (StereotypeName type : values()) {
             if (type.qName.equals(qName)) {
                 return true;

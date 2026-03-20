@@ -3,14 +3,13 @@ package com.project.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Model {
+public class UmlClass {
     private String id;
     private String name;
     private boolean isEntity;
     private boolean formView;
     private boolean listView;
     private String uri;
-    private Pageable pageable;
     private List<Property> properties = new ArrayList<>();
     public String getId() {
         return id;
@@ -44,13 +43,6 @@ public class Model {
         isEntity = entity;
     }
 
-    public Pageable getPageable() {
-        return pageable;
-    }
-
-    public void setPageable(Pageable pageable) {
-        this.pageable = pageable;
-    }
 
     public String getUri() {
         return uri;

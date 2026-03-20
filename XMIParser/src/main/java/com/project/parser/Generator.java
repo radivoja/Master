@@ -1,6 +1,6 @@
 package com.project.parser;
 
-import com.project.model.Model;
+import com.project.model.UmlClass;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.util.StringUtils;
@@ -24,19 +24,19 @@ public class Generator {
     private XmiReader xmiReader = new XmiReader();
     private String umlPath;
     private String projectRoot;
-    private Collection<Model> models;
+    private Collection<UmlClass> umlClasses;
 
 
     public Generator(String umlPath, String projectRoot) throws IOException, ParserConfigurationException, SAXException {
         this.umlPath = umlPath;
         this.projectRoot = ensureEndsWithSlash(projectRoot);
-        this.models = xmiReader.getModels(umlPath);
+        this.umlClasses = xmiReader.getModels(umlPath);
     }
 
     public void generateComponent(Component component) throws IOException, TemplateException {
         Map<String, Object> map = new HashMap<>();
         Template template = loader.loadTemplate(component);
-        for(Model model : models) {
+        for(UmlClass model : umlClasses) {
             if (component.equals(Component.FORM) && !(model.isFormView())){
                 return;
             }
@@ -63,12 +63,12 @@ public class Generator {
         }
 
         try (Writer fileOut = new FileWriter(file)) {
-            map.put(MODELS, models);
+            map.put(MODELS, umlClasses);
             template.process(map, fileOut);
         }
     }
 
-    private Writer createWriter(Component component, Model model) throws IOException {
+    private Writer createWriter(Component component, UmlClass model) throws IOException {
         String modelName = StringUtils.capitalize(model.getName());
         String fileName = modelName + component.getSuffix() + component.getExtension();
 

@@ -1,23 +1,20 @@
 package com.project.parser;
 
-import com.project.model.Model;
-import com.project.model.Pageable;
 import com.project.model.Property;
 import com.project.model.Stereotype;
+import com.project.model.UmlClass;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.project.parser.XmiConstants.*;
 
 public class Reader extends DefaultHandler {
-    private Map<String, Model> models = new HashMap<>();
+    private Map<String, UmlClass> umlClasses = new HashMap<>();
     private List<Stereotype> stereotypes = new ArrayList<>();
     private List<Property> propertiesList;
     private Property property;
@@ -30,18 +27,16 @@ public class Reader extends DefaultHandler {
 
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) {
-
         if(qName.equals(UML_MODEL)){
             modelUri = attributes.getValue(XMI_MODEL_URI);
         }
 
         // Initialize the model object
         if (isUmlClass(qName, attributes)) {
-            Model model = parseModel(attributes);
+            UmlClass model = parseModel(attributes);
             propertiesList = new ArrayList<>();
             model.setProperties(propertiesList);
-
-            models.put(model.getId(), model);
+            umlClasses.put(model.getId(), model);
         }
 
         // Initialize the properties
@@ -70,7 +65,6 @@ public class Reader extends DefaultHandler {
             stereotypes.add(stereotype);
         }
 
-
     }
 
     public boolean isUmlClass(String qName, Attributes attributes) {
@@ -89,8 +83,8 @@ public class Reader extends DefaultHandler {
         return false;
     }
 
-    public Model parseModel(Attributes attributes) {
-        Model model = new Model();
+    public UmlClass parseModel(Attributes attributes) {
+        UmlClass model = new UmlClass();
         model.setId(attributes.getValue(XMI_ID));
         model.setName(attributes.getValue(XMI_MODEL_NAME));
         model.setUri(modelUri);
@@ -147,106 +141,25 @@ public class Reader extends DefaultHandler {
         return property;
     }
 
-    public void sortAssociation(Model model) {
-        for (Property property : model.getProperties()) {
-            if (property.getAssociation() != null) {
-                Model relatedModel = models.get(property.getType());
-                Property relatedProperty = getRelatedProperty(relatedModel, property.getAssociation());
-                // Set Property type field to match relationship type
-                property.setType(relatedModel.getName());
-                relatedProperty.setType(model.getName());
-                if (property.getUpperValue() == null && relatedProperty.getUpperValue() == null) {
-                    property.setRelationship("OneToOne");
-                    relatedProperty.setRelationship("OneToOne");
-                } else if (property.getUpperValue() != null && relatedProperty.getUpperValue() != null) {
-                    property.setRelationship("ManyToMany");
-                    relatedProperty.setMappedBy(relatedProperty.getName());
-                    relatedProperty.setRelationship("ManyToMany");
-                } else {
-                    if (property.getUpperValue() != null) {
-                        //Change property type field as List
-                        property.setType("List<" + relatedModel.getName() + ">");
-                        property.setRelationship("OneToMany");
-                        property.setMappedBy(model.getName());
-                        relatedProperty.setRelationship("ManyToOne");
-                    } else {
-                        relatedProperty.setType("List<" + model.getName() + ">");
-                        property.setRelationship("ManyToOne");
-                        relatedProperty.setRelationship("OneToMany");
-                        relatedProperty.setMappedBy(relatedModel.getName());
-                    }
-                }
-                // Set Property association fields to null to prevent additional checking
-                // since we resolve cardinality for both sides in single iteration
-                property.setAssociation(null);
-                relatedProperty.setAssociation(null);
-            }
-        }
-    }
-
-    public void sortStereotype(Model model) {
-        for (Property property : model.getProperties()) {
-            List<Stereotype> stereoList = stereotypes.stream()
-                    .filter(stereo -> stereo.getBase().equals(property.getId()))
-                    .collect(Collectors.toList());
-            property.setStereotypes(stereoList);
-        }
-    }
-
-    public void sortStereotypeforEntity() {
-        for(Stereotype stereotype : stereotypes){
-            if(stereotype.getType().equals(BASE_CLASS)){
-                Model model = models.get(stereotype.getBase());
-                model.setEntity(true);
-                if (StereotypeName.PAGEABLE.getQName().equals(stereotype.getName())) {
-                    Pageable pageable = new Pageable();
-                    pageable.setPageNo(stereotype.getPageNo());
-                    pageable.setPageSize(stereotype.getPageSize());
-                    model.setPageable(pageable);
-                }
-            }
-        }
-    }
 
     @Override
     public void endDocument() {
-        for(Model model : models.values()){
-            sortAssociation(model);
-            sortStereotype(model);
-        }
-
-        sortStereotypeforEntity();
+        /*
         try {
             Printer.printInfo(models);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        setModelNameToLowerCase();
-    }
-
-    public void setModelNameToLowerCase(){
-        for (Model model : models.values()) {
-            model.setName(model.getName().toLowerCase());
-        }          
-    }
-
-    public Property getRelatedProperty(Model model, String association) {
-        return model.getProperties().stream()
-                .filter(prop -> prop.getAssociation() != null)
-                .filter(prop -> prop.getAssociation().equals(association))
-                .findFirst()
-                .orElse(null);
+         */
     }
 
 
-    public Map<String, Model> getEntityModels() {
-      /*  return models.entrySet().
-                stream().filter(x -> x.getValue().isEntity())
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-       */
-
-        return  models;
+    public Map<String, UmlClass> getUmlClasses(){
+        return umlClasses;
     }
+
+    public List<Stereotype> getStereotypes(){
+        return stereotypes;
+    }
+
 }
