@@ -36,7 +36,7 @@ public class [=model.name?cap_first]Dao {
 
 [#macro printValidation property]
     [#list property.stereotypes as stereo]
-       [#if stereo.name == 'MyMetaModel:EntityProperty']
+       [#if stereo.name == 'SpringBootMVCProfile:MVCProperty']
           [#if property.type == 'String']
     @NotBlank
              [#if stereo.maxLength?? && stereo.minLength??]

@@ -8,8 +8,6 @@ public class Stereotype {
     private String minLength;
     private String maxLength;
     private String nullable;
-    private String pageNo;
-    private String pageSize;
 
     public String getId() {
         return id;
@@ -74,19 +72,4 @@ public class Stereotype {
         this.nullable = nullable;
     }
 
-    public String getPageNo() {
-        return pageNo;
-    }
-
-    public void setPageNo(String pageNo) {
-        this.pageNo = pageNo;
-    }
-
-    public String getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(String pageSize) {
-        this.pageSize = pageSize;
-    }
 }

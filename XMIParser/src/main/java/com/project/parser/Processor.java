@@ -85,13 +85,17 @@ public class Processor {
         }
     }
 
-
     public void sortStereotypeForEntity(Map<String, UmlClass> umlClasses, List<Stereotype> stereotypes) {
         for(Stereotype stereotype : stereotypes){
             if(stereotype.getType().equals(BASE_CLASS)){
                 UmlClass model = umlClasses.get(stereotype.getBase());
                 model.setEntity(true);
             }
+
+            if(stereotype.getName().equals(StereotypeName.MVC_FORM.getQName())){
+                umlClasses.get(stereotype.getBase()).setFormView(true);
+            }
+
         }
     }
 

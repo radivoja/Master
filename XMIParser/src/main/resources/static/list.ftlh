@@ -24,10 +24,9 @@
 
 [#-- Pageable links --]
 [#macro pageableLinks]
-[#if model.pageable??]
         <span><a th:if="${pageNo > 1}" th:href="@{'?pageNo='} + ${pageNo-1} + '&pageSize=' + ${pageSize}">Previous Page</a></span>
         <span text-align="middle"><a th:if="${[=model.name]List.number < [=model.name]List.totalPages-1}" th:href="@{'?pageNo='} + ${pageNo+1} + '&pageSize=' + ${pageSize}">Next Page</a></span>
-[/#if]
+
 [/#macro]
 
 [#-- Table header--]
@@ -40,8 +39,12 @@
 				    <th> [=property.name] </th>
     [/#if]
 [/#list]
+[#if (model.listView.editEnabled!"") == "true"]
 				    <th> Edit </th>
-				    <th> Delete </th>
+[/#if]
+[#if (model.listView.deleteEnabled!"") == "true"]
+					<th> Delete </th>
+[/#if]
 			    </tr>
 		    </thead>
 [/#macro]
@@ -51,8 +54,14 @@
 		    <tbody>
 				<tr th:each="[=item.name] : ${[=item.name]List}">
 [@displayProperties item=model/]
+[#if (model.listView.editEnabled!"") == "true"]
 [@editLink item=model/]
+[/#if]
+[#if model.listView??]
+    [#if (model.listView.deleteEnabled!"") == "true"]
 [@delete item=model/]
+    [/#if]
+[/#if]
 				<tr>
 			</tbody>
 [/#macro]

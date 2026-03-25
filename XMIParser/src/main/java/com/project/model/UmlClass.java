@@ -8,7 +8,7 @@ public class UmlClass {
     private String name;
     private boolean isEntity;
     private boolean formView;
-    private boolean listView;
+    private ListView listView;
     private String uri;
     private List<Property> properties = new ArrayList<>();
     public String getId() {
@@ -31,7 +31,7 @@ public class UmlClass {
     }
     @Override
     public String toString() {
-        return "Model [id=" + id + ", name=" + name + ", properties=" + properties + "]";
+        return "UML class [id=" + id + ", name=" + name + ", properties=" + properties + "]";
     }
 
 
@@ -57,11 +57,13 @@ public class UmlClass {
     public void setFormView(boolean formView) {
         this.formView = formView;
     }
-    public boolean isListView() {
+
+
+
+    public ListView getListView() {
         return listView;
     }
-
-    public void setListView(boolean listView) {
+    public void setListView(ListView listView) {
         this.listView = listView;
     }
 }

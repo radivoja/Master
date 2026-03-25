@@ -21,28 +21,32 @@ import static com.project.parser.XmiConstants.*;
 
 public class Generator {
     private Loader loader = new Loader();
-    private XmiReader xmiReader = new XmiReader();
-    private String umlPath;
     private String projectRoot;
     private Collection<UmlClass> umlClasses;
+    private XmiReader xmiReader;
 
 
     public Generator(String umlPath, String projectRoot) throws IOException, ParserConfigurationException, SAXException {
-        this.umlPath = umlPath;
+        xmiReader = new XmiReader(umlPath);
         this.projectRoot = ensureEndsWithSlash(projectRoot);
-        this.umlClasses = xmiReader.getModels(umlPath);
+        this.umlClasses = xmiReader.getUmlClasses();
     }
 
     public void generateComponent(Component component) throws IOException, TemplateException {
         Map<String, Object> map = new HashMap<>();
         Template template = loader.loadTemplate(component);
-        for(UmlClass model : umlClasses) {
-            if (component.equals(Component.FORM) && !(model.isFormView())){
-                return;
-            }
 
-            if (component.equals(Component.LIST) && !(model.isListView())){
-                return;
+        for(UmlClass model : umlClasses) {
+            if (component.equals(Component.FORM)) {
+                if(!model.isFormView()){
+                    continue;
+                }
+
+            }
+            if (component.equals(Component.LIST)) {
+                if(!model.isFormView()) {
+                    continue;
+                }
             }
 
 

@@ -13,11 +13,13 @@ public class XmiReader {
     private Reader reader = new Reader();
     private Processor processor = new Processor();
 
-    // Parses the UML file and returns all parsed models that are marked as entities
-    public Collection<UmlClass> getModels(String umlFilePath) throws ParserConfigurationException, SAXException, IOException {
+    public XmiReader(String umlFilePath) throws IOException, SAXException, ParserConfigurationException {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = factory.newSAXParser();
         saxParser.parse(umlFilePath, reader);
+    }
+    // Parses the UML file and returns all parsed models that are marked as entities
+    public Collection<UmlClass> getUmlClasses(){
         processor.process(reader.getUmlClasses(), reader.getStereotypes()).values();
         return reader.getUmlClasses().values();
     }

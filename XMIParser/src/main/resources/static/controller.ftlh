@@ -44,14 +44,11 @@ public class [=model.name?cap_first]Controller {
 
 	// 1. Get
 	@GetMapping("/[=model.name]List")
-	public String get[=model.name?cap_first]List(Model model[#if pageable(model)],@RequestParam(defaultValue = "[=model.pageable.pageNo!1]") int pageNo, @RequestParam(defaultValue = "[=model.pageable.pageSize!5]") int pageSize [/#if]) {
-	    [#if pageable(model)]
+	public String get[=model.name?cap_first]List(Model model, @RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "[#if model.listView??][=model.listView.pageSize][/#if]") int pageSize) {
 	    Page<[=model.name?cap_first]Dao> [=model.name]List = [=model.name]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("pageSize", pageSize);
-        [#else]
-        List<[=model.name?cap_first]Dao> [=model.name]List = [=model.name]Service.get[=model.name?cap_first]List();
-	    [/#if]
+
 		model.addAttribute("[=model.name]List", [=model.name]List);
 		[#list model.properties as property]
 			[#if checkManyToOne(property)]
@@ -61,12 +58,10 @@ public class [=model.name?cap_first]Controller {
 		return "[=model.name]List";
 	}
 
-    [#if pageable(model)]
 	public Page<[=model.name?cap_first]Dao> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
     	Pageable pageable = PageRequest.of(pageNo-1, pageSize);
     	return [=model.name]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
     }
-    [/#if]
 
 	// 2.1 Prepare Form
 	@GetMapping("/[=model.name]Form")
@@ -156,10 +151,3 @@ public class [=model.name?cap_first]Controller {
     [/#if]
 [/#function]
 
-[#function pageable model]
-    [#if model.pageable??]
-        [#return true]
-    [#else]
-        [#return false]
-    [/#if]
-[/#function]

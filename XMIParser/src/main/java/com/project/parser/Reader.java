@@ -1,5 +1,6 @@
 package com.project.parser;
 
+import com.project.model.ListView;
 import com.project.model.Property;
 import com.project.model.Stereotype;
 import com.project.model.UmlClass;
@@ -115,14 +116,24 @@ public class Reader extends DefaultHandler {
         if(attributes.getValue("nullable") != null){
             stereotype.setNullable(attributes.getValue("nullable"));
         }
-        if(attributes.getValue("pageNo") != null){
-            stereotype.setPageNo(attributes.getValue("pageNo"));
-        }
-        if(attributes.getValue("pageSize") != null){
-            stereotype.setPageSize(attributes.getValue("pageSize"));
-        }
 
+        if(StereotypeName.MVC_LIST.getQName().equals(qName)){
+            ListView listView = new ListView();
+            listView.setId(attributes.getValue(XMI_ID));
+            listView.setDeleteEnabled(attributes.getValue(DELETE_ENABLED));
+            listView.setEditEnabled(attributes.getValue(EDIT_ENABLED));
+
+            if(attributes.getValue(PAGE_SIZE) != null){
+                listView.setPageSize(attributes.getValue(PAGE_SIZE));
+            }
+            else {
+                // temp fix
+                listView.setPageSize("5");
+            }
+            umlClasses.get(stereotype.getBase()).setListView(listView);
+        }
         System.out.println(stereotype);
+
         return stereotype;
     }
 

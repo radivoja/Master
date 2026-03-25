@@ -21,4 +21,7 @@ public final class XmiConstants {
     static String XMI_OWNER_ATTRIBUTE = "ownedAttribute";
     static String XMI_PACKAGED_ELEMENT = "packagedElement";
     static String UML_MODEL = "uml:Model";
+    static String DELETE_ENABLED = "deleteEnabled";
+    static String EDIT_ENABLED = "editEnabled";
+    static String PAGE_SIZE = "pageSize";
 }
