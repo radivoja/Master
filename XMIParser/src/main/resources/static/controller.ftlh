@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import [=model.uri].dao.[=model.name?cap_first]Dao;
 import [=model.uri].service.[=model.name?cap_first]Service;
-[#list model.properties as property]
+[#list model.properties?values as property]
 	[#if checkManyToOne(property)]
 import [=model.uri].service.[=property.name?cap_first]Service;
 import [=model.uri].dao.[=property.name?cap_first]Dao;
@@ -27,15 +27,15 @@ import java.util.List;
 public class [=model.name?cap_first]Controller {
 
 	private final [=model.name?cap_first]Service [=model.name]Service;
-[#list model.properties as property]
+[#list model.properties?values as property]
 	[#if checkManyToOne(property)]
 	private final [=property.name?cap_first]Service [=property.name]Service;
 	[/#if]
 [/#list]
 
-	public [=model.name?cap_first]Controller([=model.name?cap_first]Service [=model.name]Service[#list model.properties as property][#if checkManyToOne(property)], [=property.name?cap_first]Service [=property.name]Service[/#if][/#list]){
+	public [=model.name?cap_first]Controller([=model.name?cap_first]Service [=model.name]Service[#list model.properties?values as property][#if checkManyToOne(property)], [=property.name?cap_first]Service [=property.name]Service[/#if][/#list]){
 		this.[=model.name]Service = [=model.name]Service;
-[#list model.properties as property]
+[#list model.properties?values as property]
 	[#if checkManyToOne(property)]
 		this.[=property.name]Service = [=property.name]Service;
 	[/#if]
@@ -50,7 +50,7 @@ public class [=model.name?cap_first]Controller {
         model.addAttribute("pageSize", pageSize);
 
 		model.addAttribute("[=model.name]List", [=model.name]List);
-		[#list model.properties as property]
+		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
 			[/#if]
@@ -66,7 +66,7 @@ public class [=model.name?cap_first]Controller {
 	// 2.1 Prepare Form
 	@GetMapping("/[=model.name]Form")
     public String prepareForm(Model model) {
-		[#list model.properties as property]
+		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
 			[/#if]
@@ -79,7 +79,7 @@ public class [=model.name?cap_first]Controller {
 	// 2.2 Post Form
 	@PostMapping("/[=model.name]Form")
 	public String formPost(Model model, @Valid @ModelAttribute("[=model.name]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult) {
-		[#list model.properties as property]
+		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
 			[/#if]
@@ -97,7 +97,7 @@ public class [=model.name?cap_first]Controller {
     public String prepareUpdateForm(Model model, @PathVariable("[=model.name]Id") int [=model.name]Id){
         Optional<[=model.name?cap_first]Dao> [=model.name] = [=model.name]Service.find[=model.name?cap_first]ById([=model.name]Id);
         if([=model.name].isPresent()){
-			[#list model.properties as property]
+			[#list model.properties?values as property]
 				[#if checkManyToOne(property)]
 			model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
 				[/#if]
@@ -108,10 +108,11 @@ public class [=model.name?cap_first]Controller {
         return "[=model.name]List";
     }
 
+/*
     // 3.2 Post Edit Form
     @PostMapping("[=model.name]Form/{[=model.name]Id}/edit")
     public String formUpdatePost(Model model, @Valid @ModelAttribute("[=model.name]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult, @PathVariable("[=model.name]Id") int [=model.name]Id){
-		[#list model.properties as property]
+		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
 			[/#if]
@@ -124,7 +125,7 @@ public class [=model.name?cap_first]Controller {
         [=model.name]Service.save[=model.name?cap_first]([=model.name]);
         return "redirect:/[=model.name]List";
     }
-
+*/
 	// 4. Delete
 	@GetMapping("/delete[=model.name?cap_first]")
 	public String delete(@RequestParam(name="id") Optional<Integer> id){
@@ -133,7 +134,7 @@ public class [=model.name?cap_first]Controller {
 	}
 
 	[#-- ManyToOne relationships resolver --]
-	[#list model.properties as property]
+	[#list model.properties?values as property]
 		[#if checkManyToOne(property)]
 	private List<[=property.name?cap_first]Dao> get[=property.name]ServiceList() {
 		return [=property.name]Service.get[=property.name?cap_first]List();

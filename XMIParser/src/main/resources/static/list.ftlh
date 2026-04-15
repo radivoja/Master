@@ -33,16 +33,16 @@
 [#macro tableHeader item]
             <thead>
                 <tr>
-[#list item.properties as property]
+[#list item.properties?values as property]
     [#-- Only show non-OneToMany/ManyToMany properties in list view --]
     [#if !property.relationship?? || property.relationship == 'ManyToOne']
 				    <th> [=property.name] </th>
     [/#if]
 [/#list]
-[#if (model.listView.editEnabled!"") == "true"]
+[#if ((model.listView.editEnabled)!"") == "true"]
 				    <th> Edit </th>
 [/#if]
-[#if (model.listView.deleteEnabled!"") == "true"]
+[#if ((model.listView.deleteEnabled)!"") == "true"]
 					<th> Delete </th>
 [/#if]
 			    </tr>
@@ -54,11 +54,11 @@
 		    <tbody>
 				<tr th:each="[=item.name] : ${[=item.name]List}">
 [@displayProperties item=model/]
-[#if (model.listView.editEnabled!"") == "true"]
+[#if ((model.listView.editEnabled)!"") == "true"]
 [@editLink item=model/]
 [/#if]
 [#if model.listView??]
-    [#if (model.listView.deleteEnabled!"") == "true"]
+    [#if ((model.listView.deleteEnabled)!"") == "true"]
 [@delete item=model/]
     [/#if]
 [/#if]
@@ -68,7 +68,7 @@
 
 [#-- Display properties --]
 [#macro displayProperties item]
-[#list item.properties as property]
+[#list item.properties?values as property]
     [#if !property.relationship??]
         [#-- Regular property: just display it --]
         			<td th:text="${[=item.name].[=property.name?uncap_first]}"></td>

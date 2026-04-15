@@ -1,6 +1,6 @@
 package com.project.parser;
 
-import com.project.model.UmlClass;
+import com.project.domain.DomainClass;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.springframework.util.StringUtils;
@@ -22,33 +22,45 @@ import static com.project.parser.XmiConstants.*;
 public class Generator {
     private Loader loader = new Loader();
     private String projectRoot;
-    private Collection<UmlClass> umlClasses;
-    private XmiReader xmiReader;
+    private Reader reader = new Reader();
+    private UmlModelResolver resolver;
+    private Collection<DomainClass> domainClasses;
 
-
-    public Generator(String umlPath, String projectRoot) throws IOException, ParserConfigurationException, SAXException {
-        xmiReader = new XmiReader(umlPath);
+    public Generator(String umlPath, String projectRoot) throws ParserConfigurationException, SAXException, IOException {
+     /*   SAXParserFactory factory = SAXParserFactory.newInstance();
+        SAXParser saxParser = factory.newSAXParser();
+        saxParser.parse(umlPath, reader);
+        *
+      */
         this.projectRoot = ensureEndsWithSlash(projectRoot);
-        this.umlClasses = xmiReader.getUmlClasses();
+        this.resolver = new UmlModelResolver(umlPath);
+        domainClasses = resolver.prepareDomainModel().values();
     }
+
+
+
 
     public void generateComponent(Component component) throws IOException, TemplateException {
         Map<String, Object> map = new HashMap<>();
         Template template = loader.loadTemplate(component);
 
-        for(UmlClass model : umlClasses) {
+        for(DomainClass model : domainClasses) {
+
+           /*
             if (component.equals(Component.FORM)) {
-                if(!model.isFormView()){
+                if(model.getListView() != null){
                     continue;
                 }
 
             }
+
             if (component.equals(Component.LIST)) {
                 if(!model.isFormView()) {
                     continue;
                 }
             }
 
+            */
 
             Writer fileOut = createWriter(component, model);
             map.put(MODEL, model);
@@ -67,12 +79,12 @@ public class Generator {
         }
 
         try (Writer fileOut = new FileWriter(file)) {
-            map.put(MODELS, umlClasses);
+            map.put(MODELS, domainClasses);
             template.process(map, fileOut);
         }
     }
 
-    private Writer createWriter(Component component, UmlClass model) throws IOException {
+    private Writer createWriter(Component component, DomainClass model) throws IOException {
         String modelName = StringUtils.capitalize(model.getName());
         String fileName = modelName + component.getSuffix() + component.getExtension();
 
@@ -89,13 +101,13 @@ public class Generator {
 
 
     private String resolveBasePath(Component component) {
-        if (isTemplateComponent(component)) {
+        if (isThymeleafComponent(component)) {
             return projectRoot + TEMPLATE_ROOT;
         }
         return projectRoot + JAVA_ROOT;
     }
 
-    private boolean isTemplateComponent(Component component) {
+    private boolean isThymeleafComponent(Component component) {
         return component == Component.LIST
                 || component == Component.FORM
                 || component == Component.INDEX;

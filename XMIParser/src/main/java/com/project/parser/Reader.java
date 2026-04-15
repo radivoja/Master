@@ -1,9 +1,7 @@
 package com.project.parser;
 
-import com.project.model.ListView;
-import com.project.model.Property;
-import com.project.model.Stereotype;
-import com.project.model.UmlClass;
+import com.project.model.*;
+import com.project.stereotype.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -13,14 +11,16 @@ import java.util.List;
 import java.util.Map;
 
 import static com.project.parser.XmiConstants.*;
+import static com.project.parser.XmiConstants.UNIQUE;
 
 public class Reader extends DefaultHandler {
     private Map<String, UmlClass> umlClasses = new HashMap<>();
     private List<Stereotype> stereotypes = new ArrayList<>();
-    private List<Property> propertiesList;
-    private Property property;
+    private List<UmlProperty> propertiesList;
+    private UmlProperty property;
     private final XmiToJavaTypeMapper typeMapper = new XmiToJavaTypeMapper();
     private String modelUri;
+    private UmlClass umlClass;
 
     @Override
     public void startDocument() {
@@ -32,12 +32,12 @@ public class Reader extends DefaultHandler {
             modelUri = attributes.getValue(XMI_MODEL_URI);
         }
 
-        // Initialize the model object
+        // Initialize the uml class model object
         if (isUmlClass(qName, attributes)) {
-            UmlClass model = parseModel(attributes);
+            umlClass = parseUmlClassForModel(attributes);
             propertiesList = new ArrayList<>();
-            model.setProperties(propertiesList);
-            umlClasses.put(model.getId(), model);
+            umlClass.setProperties(propertiesList);
+            umlClasses.put(umlClass.getXmiId(), umlClass);
         }
 
         // Initialize the properties
@@ -47,17 +47,17 @@ public class Reader extends DefaultHandler {
         }
 
         // Cardinality
-        if (qName.equals("upperValue")) {
-            property.setUpperValue(attributes.getValue("value"));
+        if (qName.equals(UPPER_VALUE)) {
+            property.setUpperValue(attributes.getValue(VALUE));
         }
 
-        if (qName.equals("lowerValue")) {
-            property.setLowerValue(attributes.getValue("value"));
+        if (qName.equals(LOWER_VALUE)) {
+            property.setLowerValue(attributes.getValue(VALUE));
         }
 
         // Property type
-        if (qName.equals("type")) {
-            property.setType(typeMapper.map(attributes.getValue("href")));
+        if (qName.equals(TYPE)) {
+            property.setType(typeMapper.map(attributes.getValue(HREF)));
         }
 
         // Stereotypes
@@ -84,28 +84,97 @@ public class Reader extends DefaultHandler {
         return false;
     }
 
-    public UmlClass parseModel(Attributes attributes) {
+    public UmlClass parseUmlClassForModel(Attributes attributes) {
         UmlClass model = new UmlClass();
-        model.setId(attributes.getValue(XMI_ID));
+        model.setXmiId(attributes.getValue(XMI_ID));
         model.setName(attributes.getValue(XMI_MODEL_NAME));
         model.setUri(modelUri);
         return model;
     }
 
     public Stereotype parseStereotype(String qName, Attributes attributes) {
-        Stereotype stereotype = new Stereotype();
-        stereotype.setName(qName);
+       /* Stereotype stereotype = new Stereotype();
+        stereotype.setXmiId(attributes.getValue(XMI_ID));
+        stereotype.setStereotypeName(StereotypeName.fromQName(qName));
+        */
+        Stereotype stereotype;
 
-        if (attributes.getValue(BASE_CLASS) != null) {
-            stereotype.setBase(attributes.getValue(BASE_CLASS));
-            stereotype.setType(BASE_CLASS);
-        } else {
-            stereotype.setBase(attributes.getValue(BASE_PROPERTY));
-            stereotype.setType(BASE_PROPERTY);
+
+        StereotypeName stereotypeName = StereotypeName.fromQName(qName);
+        switch (stereotypeName) {
+            case ID -> {
+                Id id = new Id();
+                id.setGenerated(attributes.getValue(GENERATED));
+                id.setGenerationStrategy(attributes.getValue(GENERATION_STRATEGY));
+                stereotype = id;
+            }
+
+            case MVC_LIST -> {
+                ListView listView = new ListView();
+                listView.setId(attributes.getValue(XMI_ID));
+                listView.setDeleteEnabled(attributes.getValue(DELETE_ENABLED));
+                listView.setEditEnabled(attributes.getValue(EDIT_ENABLED));
+
+                if (attributes.getValue(PAGE_SIZE) != null) {
+                    listView.setPageSize(attributes.getValue(PAGE_SIZE));
+                } else {
+                    // temp fix
+                    listView.setPageSize("5");
+                }
+                stereotype = listView;
+                //     umlClasses.get(stereotype.getBaseXmiId()).setListView(listView);
+            }
+
+            case SORT_BY -> {
+                SortBy sortBy = new SortBy();
+                sortBy.setSortDirection(attributes.getValue(GENERATION_STRATEGY));
+                stereotype = sortBy;
+            }
+
+            case ENTITY, KEY, ENTITY_PROPERTY -> {
+                stereotype = null;
+            }
+            case TO_STRING -> {
+                stereotype = null;
+            }
+            case UNIQUE -> {
+                stereotype = null;
+            }
+            case COMMON -> {
+                stereotype = null;
+
+            }
+            case MVC_PROPERTY -> {
+                MVCProperty mvcProperty = new MVCProperty();
+                mvcProperty.setUnique(attributes.getValue(UNIQUE));
+                stereotype = mvcProperty;
+            }
+
+            case MVC_FORM -> {
+                MVCForm mvcForm = new MVCForm();
+                mvcForm.setReadonly(attributes.getValue(READONLY));
+                stereotype = mvcForm;
+            }
+
+            default -> {
+                stereotype = null;
+            }
         }
 
-        stereotype.setId(attributes.getValue(XMI_ID));
+        if (attributes.getValue(BASE_CLASS) != null) {
+            stereotype.setIsClass(true);
+            stereotype.setBaseXmiId(attributes.getValue(BASE_CLASS));
+        } else {
+            stereotype.setIsClass(false);
+            stereotype.setBaseXmiId(attributes.getValue(BASE_PROPERTY));
 
+        }
+
+        stereotype.setXmiId(attributes.getValue(XMI_ID));
+        stereotype.setName(StereotypeName.fromQName(qName));
+
+
+       /*
         if(attributes.getValue("minLength") != null){
             stereotype.setMinLength(attributes.getValue("minLength"));
         }
@@ -117,37 +186,24 @@ public class Reader extends DefaultHandler {
             stereotype.setNullable(attributes.getValue("nullable"));
         }
 
-        if(StereotypeName.MVC_LIST.getQName().equals(qName)){
-            ListView listView = new ListView();
-            listView.setId(attributes.getValue(XMI_ID));
-            listView.setDeleteEnabled(attributes.getValue(DELETE_ENABLED));
-            listView.setEditEnabled(attributes.getValue(EDIT_ENABLED));
+        */
 
-            if(attributes.getValue(PAGE_SIZE) != null){
-                listView.setPageSize(attributes.getValue(PAGE_SIZE));
-            }
-            else {
-                // temp fix
-                listView.setPageSize("5");
-            }
-            umlClasses.get(stereotype.getBase()).setListView(listView);
-        }
         System.out.println(stereotype);
 
         return stereotype;
     }
 
-    public Property parseProperty(Attributes attributes) {
-        Property property = new Property();
-        String id = attributes.getValue(XMI_ID);
-        String name = attributes.getValue("name");
-        property.setId(id);
+    public UmlProperty parseProperty(Attributes attributes) {
+        UmlProperty property = new UmlProperty();
+        String xmiId = attributes.getValue(XMI_ID);
+        String name = attributes.getValue(NAME);
+        property.setXmiId(xmiId);
         property.setName(name);
 
-        String association = attributes.getValue("association");
+        String association = attributes.getValue(ASSOCIATION);
         if (association != null) {
             property.setAssociation(association);
-            property.setType(attributes.getValue("type"));
+            property.setType(attributes.getValue(TYPE));
         }
         return property;
     }

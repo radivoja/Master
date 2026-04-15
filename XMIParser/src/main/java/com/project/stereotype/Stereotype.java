@@ -1,52 +1,57 @@
-package com.project.model;
+package com.project.stereotype;
+
+import com.project.parser.StereotypeName;
 
 public class Stereotype {
-    private String id;
-    private String name;
-    private String base;
-    private String type;
+    private String xmiId;
+    private String baseXmiId;
+    private boolean isClass;
     private String minLength;
     private String maxLength;
     private String nullable;
+    private StereotypeName name;
 
-    public String getId() {
-        return id;
+
+    public boolean isClass() {
+        return isClass;
     }
-    public void setId(String id) {
-        this.id = id;
+
+    public void setIsClass(boolean isClass) {
+        this.isClass = isClass;
     }
-    public String getName() {
+
+    public String getXmiId() {
+        return xmiId;
+    }
+    public void setXmiId(String xmiId) {
+        this.xmiId = xmiId;
+    }
+
+    public StereotypeName getName() {
         return name;
     }
-    public void setName(String name) {
+    public void setName(StereotypeName name) {
         this.name = name;
     }
-    public String getBase() {
-        return base;
+    public String getBaseXmiId() {
+        return baseXmiId;
     }
-    public void setBase(String base) {
-        this.base = base;
+    public void setBaseXmiId(String baseXmiId) {
+        this.baseXmiId = baseXmiId;
     }
 
     @Override
     public String toString() {
         return "Stereotype{" +
-                "id='" + id + '\'' +
+                "xmi:id='" + xmiId + '\'' +
                 ", name='" + name + '\'' +
-                ", base='" + base + '\'' +
-                ", type='" + type + '\'' +
+                ", base='" + baseXmiId + '\'' +
                 ", minLength='" + minLength + '\'' +
                 ", maxLength='" + maxLength + '\'' +
                 ", nullable='" + nullable + '\'' +
                 '}';
     }
 
-    public String getType() {
-        return type;
-    }
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public String getMinLength() {
         return minLength;

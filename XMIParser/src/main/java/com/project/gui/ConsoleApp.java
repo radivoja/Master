@@ -2,20 +2,15 @@ package com.project.gui;
 
 import com.project.parser.Component;
 import com.project.parser.Generator;
-import freemarker.template.TemplateException;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-
+import static com.project.parser.TestConstants.CIRCULATION_UML;
 import static com.project.parser.TestConstants.PROJECT_ROOT;
-import static com.project.parser.TestConstants.UML_PATH;
 
 public class ConsoleApp {
 
-    public static void main(String[] args) throws IOException, TemplateException, ParserConfigurationException, SAXException {
+    public static void main(String[] args) throws Exception {
 
-        Generator generator = new Generator(UML_PATH, PROJECT_ROOT);
+        Generator generator = new Generator(CIRCULATION_UML, PROJECT_ROOT);
 
         generator.generateComponent(Component.ENTITY);
         generator.generateComponent(Component.CONTROLLER);

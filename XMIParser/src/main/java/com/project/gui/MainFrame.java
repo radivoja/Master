@@ -1,11 +1,12 @@
 package com.project.gui;
 
-import java.awt.BorderLayout;
-
-import java.awt.FlowLayout;
-
+import com.project.parser.Component;
+import com.project.parser.Generator;
 
 import javax.swing.*;
+import java.awt.*;
+
+import static com.project.parser.TestConstants.*;
 
 public class MainFrame extends JFrame {
 
@@ -15,8 +16,8 @@ public class MainFrame extends JFrame {
 
 	private static final String FILE_DIRECTORY = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
 
-	private final JTextField tfDest = new JTextField(FILE_DIRECTORY, 30);
-	private final JTextField tfModel =  new JTextField(MODEL_NAME, 30);
+	private final JTextField tfDest = new JTextField(PROJECT_ROOT, 30);
+	private final JTextField tfModel =  new JTextField(CIRCULATION_UML, 30);
 
 	public MainFrame() {
 		JPanel panelCenter = new JPanel();
@@ -81,6 +82,21 @@ public class MainFrame extends JFrame {
 					}
 					default -> {
 						System.out.println("Successful generation");
+
+
+						Generator generator = new Generator(CIRCULATION_UML, PROJECT_ROOT);
+
+						generator.generateComponent(com.project.parser.Component.ENTITY);
+						generator.generateComponent(com.project.parser.Component.CONTROLLER);
+						generator.generateComponent(com.project.parser.Component.REPOSITORY);
+						generator.generateComponent(com.project.parser.Component.SERVICE);
+						generator.generateComponent(com.project.parser.Component.DAO);
+						generator.generateComponent(com.project.parser.Component.MAPPER);
+
+						generator.generateComponent(com.project.parser.Component.LIST);
+						generator.generateComponent(Component.FORM);
+
+						generator.generateIndex();
 						//XMLParser.generate(tfModel.getText(), tfDest.getText());
 					}
 				}

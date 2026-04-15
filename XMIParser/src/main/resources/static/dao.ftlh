@@ -1,5 +1,6 @@
 package [=model.uri].dao;
 import java.util.List;
+import java.util.Date;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -13,13 +14,13 @@ public class [=model.name?cap_first]Dao {
 [@printAccessor/]
     @Override
     public String toString() {
-        return [=checkToString()]
+        [#-- return [=checkToString()] --]
     }
 }
 
 [#macro printProperty]
-    [#list model.properties as property]
-    [@printValidation property=property/]
+    [#list model.properties?values as property]
+   [#-- [@printValidation property=property/]  --]
 
     [#if property.relationship??]
     [#if property.relationship == "ManyToOne"]
@@ -35,7 +36,7 @@ public class [=model.name?cap_first]Dao {
 
 
 [#macro printValidation property]
-    [#list property.stereotypes as stereo]
+    [#list property.stereotypes?values as stereo]
        [#if stereo.name == 'SpringBootMVCProfile:MVCProperty']
           [#if property.type == 'String']
     @NotBlank
@@ -72,7 +73,7 @@ public class [=model.name?cap_first]Dao {
 
 [#-- Print getters and setters with CONSISTENT lowercase naming --]
 [#macro printAccessor]
-[#list model.properties as property]
+[#list model.properties?values as property]
     [#if property.relationship??]
     [#if property.relationship == "ManyToOne"]
     public Integer get[=property.name?cap_first?replace(" ","")]Id(){
@@ -104,7 +105,7 @@ public class [=model.name?cap_first]Dao {
 [#-- Check toString --]
 [#function checkToString]
     [#assign retValue = ""]
-    [#list model.properties as property]
+    [#list model.properties?values as property]
         [#list property.stereotypes as stereo]
             [#if stereo.name == "MyMetaModel:ToString"]
                 [#if retValue?has_content]

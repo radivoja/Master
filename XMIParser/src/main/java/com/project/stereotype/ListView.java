@@ -1,6 +1,6 @@
-package com.project.model;
+package com.project.stereotype;
 
-public class ListView {
+public class ListView  extends Stereotype {
     private String id;
     private String pageSize;
     private String deleteEnabled;

@@ -2,7 +2,7 @@ package [=model.uri].mapper;
 
 import [=model.uri].dao.[=model.name?cap_first]Dao;
 import [=model.uri].entities.[=model.name?cap_first];
-[#list model.properties as property]
+[#list model.properties?values as property]
 [#if property.relationship?? && property.relationship != "ManyToOne"]
 import [=model.uri].entities.[=property.type?replace("List<","")?replace(">","")];
 [/#if]
@@ -20,13 +20,15 @@ public class [=model.name?cap_first]Mapper {
         }
 
         [=model.name?cap_first]Dao dao = new [=model.name?cap_first]Dao();
-[#list model.properties as property]
+[#list model.properties?values as property]
+
 [#if !property.relationship??]
         dao.set[=property.name?cap_first](entity.get[=property.name?cap_first]());
 [/#if]
 [/#list]
 
-[#list model.properties as property]
+/*
+[#list model.properties?values as property]
 [#if property.relationship??]
 [#if property.relationship == "ManyToOne"]
         // Map [=property.name] to ID
@@ -36,7 +38,7 @@ public class [=model.name?cap_first]Mapper {
 
 [#else]
         if (entity.get[=property.name?cap_first]() != null) {
-            List<[=property.type]> [=property.name?lower_case]Ids = entity.get[=property.name?cap_first]().stream()
+            List<Integer> [=property.name?lower_case]Ids = entity.get[=property.name?cap_first]().stream()
                     .map([=property.type?replace("List<","")?replace(">","")]::getId)
                     .collect(Collectors.toList());
             dao.set[=property.name?cap_first]Ids([=property.name?lower_case]Ids);
@@ -45,6 +47,7 @@ public class [=model.name?cap_first]Mapper {
 [/#if]
 [/#if]
 [/#list]
+*/
         return dao;
     }
 
@@ -54,7 +57,7 @@ public class [=model.name?cap_first]Mapper {
         }
 
         [=model.name?cap_first] entity = new [=model.name?cap_first]();
-[#list model.properties as property]
+[#list model.properties?values as property]
 [#if !property.relationship??]
         entity.set[=property.name?cap_first](dao.get[=property.name?cap_first]());
 [/#if]

@@ -1,21 +1,34 @@
 package com.project.model;
 
+import com.project.stereotype.Id;
+import com.project.stereotype.ListView;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class UmlClass {
-    private String id;
+    private String xmiId;
     private String name;
     private boolean isEntity;
     private boolean formView;
     private ListView listView;
     private String uri;
-    private List<Property> properties = new ArrayList<>();
-    public String getId() {
-        return id;
+    private List<UmlProperty> properties = new ArrayList<>();
+    private Id idProperty;
+
+    public Id getIdProperty() {
+        return idProperty;
     }
-    public void setId(String id) {
-        this.id = id;
+
+    public void setIdProperty(Id idProperty) {
+        this.idProperty = idProperty;
+    }
+
+    public String getXmiId() {
+        return xmiId;
+    }
+    public void setXmiId(String xmiId) {
+        this.xmiId = xmiId;
     }
     public String getName() {
         return name;
@@ -23,15 +36,15 @@ public class UmlClass {
     public void setName(String name) {
         this.name = name;
     }
-    public List<Property> getProperties() {
+    public List<UmlProperty> getProperties() {
         return properties;
     }
-    public void setProperties(List<Property> properties) {
+    public void setProperties(List<UmlProperty> properties) {
         this.properties = properties;
     }
     @Override
     public String toString() {
-        return "UML class [id=" + id + ", name=" + name + ", properties=" + properties + "]";
+        return "UML class [xmiId=" + xmiId + ", name=" + name + ", properties=" + properties + "]";
     }
 
 

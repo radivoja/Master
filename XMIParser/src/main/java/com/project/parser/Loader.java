@@ -6,8 +6,8 @@ import freemarker.template.Template;
 import java.io.File;
 import java.io.IOException;
 
+import static com.project.parser.TestConstants.STATIC;
 import static com.project.parser.XmiConstants.FREEMARKER_EXTENSION;
-import static com.project.parser.XmiConstants.STATIC;
 
 public class Loader {
     private Configuration configuration;

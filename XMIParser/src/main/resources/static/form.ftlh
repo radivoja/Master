@@ -2,7 +2,7 @@
 [@topHeader item=model/]
 	<body>
 		<form th:object="${[=model.name]}" method="POST" class="container-fluid" style="margin-top: 20px">
-[#list model.properties as property]
+[#list model.properties?values as property]
 	[#if property.name?uncap_first == 'id']
 	    [@idMacro/]
 	[#elseif property.relationship?? && property.relationship == 'ManyToOne']

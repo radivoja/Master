@@ -1,5 +1,6 @@
 package [=model.uri].entities;
 import java.util.List;
+import java.util.Date;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,13 +9,17 @@ public class [=model.name?cap_first] {
 [@printAccessor/]
     @Override
     public String toString() {
-        return [=checkToString()]
+    return "[=model.name]{" +
+[#list model.properties?values as p]
+        "[=p.name]=" + [=p.name][#if p?has_next] + ", " +[/#if]
+[/#list] +
+        "}";
     }
 }
 [#-- Print properties --]
 [#macro printProperty]
-    [#list model.properties as property]
-	[=checkRelationship(property)][#if property.name?uncap_first == 'id']@Id
+    [#list model.properties?values as property]
+	[=checkRelationship(property)][#if property.id??]@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)[/#if]
     private [=property.type?no_esc] [=property.name?uncap_first];
     [/#list]
@@ -23,7 +28,7 @@ public class [=model.name?cap_first] {
 
 [#-- Print getters and setters --]
 [#macro printAccessor]
-[#list model.properties as property]
+[#list model.properties?values as property]
 	public [=property.type?no_esc] get[=property.name?cap_first?replace(" ","")](){
 		return [=property.name?replace(" ", "")?uncap_first];
 	}
@@ -51,14 +56,12 @@ public class [=model.name?cap_first] {
 [#function checkToString]
     [#assign retValue = ""]
     [#list model.properties as property]
-        [#list property.stereotypes as stereo]
             [#if stereo.name == "MyMetaModel:ToString"]
                 [#if retValue?has_content]
                     [#assign retValue+=" + "]
                 [/#if]
                 [#assign retValue = retValue + '"[=property.name]" + '?no_esc + property.name?uncap_first]
             [/#if]
-        [/#list]
      [/#list]
      [#if retValue?has_content]
         [#return retValue + ";"]

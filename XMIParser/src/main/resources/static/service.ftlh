@@ -27,16 +27,10 @@ public class [=model.name?cap_first]Service {
         return [=model.name]Mapper.toDaoList(entities);
     }
 
-    [#if pageable(model)]
     public Page<[=model.name?cap_first]Dao> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
         Pageable pageable = PageRequest.of(pageNo-1, pageSize);
         Page<[=model.name?cap_first]> entityPage = [=model.name]Repository.findAll(pageable);
-        return entityPage.map([=model.name]Mapper::toDao);
-    }
-    [/#if]
-
-    public boolean hasId(int id) {
-        return [=model.name]Repository.findById(id).isPresent();
+        return entityPage.map(entity -> [=model.name]Mapper.toDao(entity));
     }
 
     public void save[=model.name?cap_first]([=model.name?cap_first]Dao dao) {
@@ -46,18 +40,10 @@ public class [=model.name?cap_first]Service {
 
     public Optional<[=model.name?cap_first]Dao> find[=model.name?cap_first]ById(int id) {
         return [=model.name]Repository.findById(id)
-                .map([=model.name]Mapper::toDao);
+                .map(entity -> [=model.name]Mapper.toDao(entity));
     }
 
     public void delete[=model.name?cap_first](Optional<Integer> id) {
         id.ifPresent(integer -> [=model.name]Repository.deleteById(id.get()));
     }
 }
-
-[#function pageable model]
-    [#if model.pageable??]
-        [#return true]
-    [#else]
-        [#return false]
-    [/#if]
-[/#function]

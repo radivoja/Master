@@ -10,7 +10,9 @@ public final class XmiConstants {
     static String UML_PROPERTY = "uml:Property";
     static String XMI_TYPE = "xmi:type";
     static String XMI_ID = "xmi:id";
-    static String STATIC = "src/main/resources/static";
+    static String NAME = "name";
+    static String ASSOCIATION = "association";
+    static String TYPE = "type";
     static String FREEMARKER_EXTENSION = ".ftlh";
     static String INDEX = "index";
     static String HTML = ".html";
@@ -24,4 +26,13 @@ public final class XmiConstants {
     static String DELETE_ENABLED = "deleteEnabled";
     static String EDIT_ENABLED = "editEnabled";
     static String PAGE_SIZE = "pageSize";
+    static String GENERATED = "generated";
+    static String GENERATION_STRATEGY = "generationStrategy";
+    static String UNIQUE = "unique";
+    static String READONLY = "readonly";
+    static String VALUE = "value";
+    static String UPPER_VALUE = "upperValue";
+    static String LOWER_VALUE = "lowerValue";
+    static String HREF = "href";
+
 }

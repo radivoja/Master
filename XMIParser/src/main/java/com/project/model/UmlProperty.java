@@ -1,18 +1,30 @@
 package com.project.model;
 
+import com.project.stereotype.Stereotype;
+
 import java.util.List;
 
-public class Property {
-    private String id;
+public class UmlProperty {
+    private String xmiId;
     private String name;
     private String type;
+    private String umlClassId;
+
+    public String getUmlClassId() {
+        return umlClassId;
+    }
+
+    public void setUmlClassId(String umlClassId) {
+        this.umlClassId = umlClassId;
+    }
+
     private String association;
     private String lowerValue;
     private String upperValue;
     private String relationship;
 	private String mappedBy;
     private List<Stereotype> stereotypes;
-    
+
     public List<Stereotype> getStereotypes() {
         return stereotypes;
     }
@@ -31,11 +43,11 @@ public class Property {
     public void setRelationship(String relationship) {
         this.relationship = relationship;
     }
-    public String getId() {
-        return id;
+    public String getXmiId() {
+        return xmiId;
     }
-    public void setId(String id) {
-        this.id = id;
+    public void setXmiId(String xmiId) {
+        this.xmiId = xmiId;
     }
     public String getName() {
         return name;
@@ -68,9 +80,10 @@ public class Property {
         this.upperValue = upperValue;
     }
     @Override
+
     public String toString() {
-        return "Property [id=" + id + ", name=" + name + ", type=" + type + ", association=" + association
+        return "Property [xmi:id=" + xmiId + ", name=" + name + ", type=" + type + ", association=" + association
                 + ", lowerValue=" + lowerValue + ", upperValue=" + upperValue + ", relationship=" + relationship + " " + stereotypes + "]";
-    }    
-	
+    }
+
 }

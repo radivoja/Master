@@ -10,7 +10,8 @@ public enum StereotypeName {
     MVC_PROPERTY("MVCProperty"),
     ID("Id"),
     MVC_LIST("MVCList"),
-    MVC_FORM("MVCForm");
+    MVC_FORM("MVCForm"),
+    SORT_BY("SortBy");
 
     private final String qName;
 
@@ -29,5 +30,14 @@ public enum StereotypeName {
             }
         }
         return false;
+    }
+
+    public static StereotypeName fromQName(String qName) {
+        for (StereotypeName type : values()) {
+            if (type.qName.equals(qName)) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown stereotype: " + qName);
     }
 }
