@@ -1,6 +1,6 @@
 package com.project.stereotype;
 
-public class SortBy  extends Stereotype {
+public class SortBy extends Stereotype {
     private String sortDirection;
 
     public String getSortDirection() {

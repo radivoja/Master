@@ -60,6 +60,8 @@ public class DomainClass {
                 "name='" + name + '\'' +
                 ", uri='" + uri + '\'' +
                 ", properties=" + properties +
+                ", listView=" + listView +
+                ", formView=" + formView +
                 '}';
     }
 }

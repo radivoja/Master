@@ -9,8 +9,6 @@ import java.util.List;
 public class UmlClass {
     private String xmiId;
     private String name;
-    private boolean isEntity;
-    private boolean formView;
     private ListView listView;
     private String uri;
     private List<UmlProperty> properties = new ArrayList<>();
@@ -42,20 +40,6 @@ public class UmlClass {
     public void setProperties(List<UmlProperty> properties) {
         this.properties = properties;
     }
-    @Override
-    public String toString() {
-        return "UML class [xmiId=" + xmiId + ", name=" + name + ", properties=" + properties + "]";
-    }
-
-
-    public boolean isEntity() {
-        return isEntity;
-    }
-
-    public void setEntity(boolean entity) {
-        isEntity = entity;
-    }
-
 
     public String getUri() {
         return uri;
@@ -64,19 +48,22 @@ public class UmlClass {
         this.uri = uri;
     }
 
-    public boolean isFormView() {
-        return formView;
-    }
-    public void setFormView(boolean formView) {
-        this.formView = formView;
-    }
-
-
-
     public ListView getListView() {
         return listView;
     }
     public void setListView(ListView listView) {
         this.listView = listView;
+    }
+
+    @Override
+    public String toString() {
+        return "UmlClass{" +
+                "xmiId='" + xmiId + '\'' +
+                ", name='" + name + '\'' +
+                ", listView=" + listView +
+                ", uri='" + uri + '\'' +
+                ", properties=" + properties +
+                ", idProperty=" + idProperty +
+                '}';
     }
 }

@@ -19,52 +19,35 @@ import static com.project.parser.TestConstants.JAVA_ROOT;
 import static com.project.parser.TestConstants.TEMPLATE_ROOT;
 import static com.project.parser.XmiConstants.*;
 
-public class Generator {
+public class FileGenerator {
     private Loader loader = new Loader();
     private String projectRoot;
     private Reader reader = new Reader();
     private UmlModelResolver resolver;
     private Collection<DomainClass> domainClasses;
 
-    public Generator(String umlPath, String projectRoot) throws ParserConfigurationException, SAXException, IOException {
-     /*   SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser saxParser = factory.newSAXParser();
-        saxParser.parse(umlPath, reader);
-        *
-      */
+    public FileGenerator(String umlPath, String projectRoot) throws ParserConfigurationException, SAXException, IOException {
         this.projectRoot = ensureEndsWithSlash(projectRoot);
         this.resolver = new UmlModelResolver(umlPath);
         domainClasses = resolver.prepareDomainModel().values();
     }
 
-
-
-
     public void generateComponent(Component component) throws IOException, TemplateException {
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> dataModel = new HashMap<>();
         Template template = loader.loadTemplate(component);
 
-        for(DomainClass model : domainClasses) {
-
-           /*
-            if (component.equals(Component.FORM)) {
-                if(model.getListView() != null){
-                    continue;
-                }
-
+        for(DomainClass domainClass : domainClasses) {
+            if(component.name().equals(Component.FORM) && domainClass.getFormView() == null) {
+                continue;
             }
 
-            if (component.equals(Component.LIST)) {
-                if(!model.isFormView()) {
-                    continue;
-                }
+            if(component.name().equals(Component.LIST) && domainClass.getListView() == null) {
+                continue;
             }
 
-            */
-
-            Writer fileOut = createWriter(component, model);
-            map.put(MODEL, model);
-            template.process(map, fileOut);
+            Writer fileOut = createWriter(component, domainClass);
+            dataModel.put(MODEL, domainClass);
+            template.process(dataModel, fileOut);
         }
     }
 

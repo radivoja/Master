@@ -1,14 +1,15 @@
 package com.project.model;
 
-import com.project.stereotype.Stereotype;
-
-import java.util.List;
-
 public class UmlProperty {
     private String xmiId;
     private String name;
     private String type;
     private String umlClassId;
+    private String association;
+    private String lowerValue;
+    private String upperValue;
+    private String relationship;
+	private String mappedBy;
 
     public String getUmlClassId() {
         return umlClassId;
@@ -18,19 +19,7 @@ public class UmlProperty {
         this.umlClassId = umlClassId;
     }
 
-    private String association;
-    private String lowerValue;
-    private String upperValue;
-    private String relationship;
-	private String mappedBy;
-    private List<Stereotype> stereotypes;
 
-    public List<Stereotype> getStereotypes() {
-        return stereotypes;
-    }
-    public void setStereotypes(List<Stereotype> stereotypes) {
-        this.stereotypes = stereotypes;
-    }
     public String getMappedBy() {
 		return mappedBy;
 	}
@@ -79,11 +68,20 @@ public class UmlProperty {
     public void setUpperValue(String upperValue) {
         this.upperValue = upperValue;
     }
+
+
     @Override
-
     public String toString() {
-        return "Property [xmi:id=" + xmiId + ", name=" + name + ", type=" + type + ", association=" + association
-                + ", lowerValue=" + lowerValue + ", upperValue=" + upperValue + ", relationship=" + relationship + " " + stereotypes + "]";
+        return "UmlProperty{" +
+                "xmiId='" + xmiId + '\'' +
+                ", name='" + name + '\'' +
+                ", type='" + type + '\'' +
+                ", umlClassId='" + umlClassId + '\'' +
+                ", association='" + association + '\'' +
+                ", lowerValue='" + lowerValue + '\'' +
+                ", upperValue='" + upperValue + '\'' +
+                ", relationship='" + relationship + '\'' +
+                ", mappedBy='" + mappedBy + '\'' +
+                '}';
     }
-
 }

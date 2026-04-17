@@ -1,7 +1,7 @@
 package com.project.gui;
 
 import com.project.parser.Component;
-import com.project.parser.Generator;
+import com.project.parser.FileGenerator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -84,19 +84,19 @@ public class MainFrame extends JFrame {
 						System.out.println("Successful generation");
 
 
-						Generator generator = new Generator(CIRCULATION_UML, PROJECT_ROOT);
+						FileGenerator fileGenerator = new FileGenerator(CIRCULATION_UML, PROJECT_ROOT);
 
-						generator.generateComponent(com.project.parser.Component.ENTITY);
-						generator.generateComponent(com.project.parser.Component.CONTROLLER);
-						generator.generateComponent(com.project.parser.Component.REPOSITORY);
-						generator.generateComponent(com.project.parser.Component.SERVICE);
-						generator.generateComponent(com.project.parser.Component.DAO);
-						generator.generateComponent(com.project.parser.Component.MAPPER);
+						fileGenerator.generateComponent(com.project.parser.Component.ENTITY);
+						fileGenerator.generateComponent(com.project.parser.Component.CONTROLLER);
+						fileGenerator.generateComponent(com.project.parser.Component.REPOSITORY);
+						fileGenerator.generateComponent(com.project.parser.Component.SERVICE);
+						fileGenerator.generateComponent(com.project.parser.Component.DAO);
+						fileGenerator.generateComponent(com.project.parser.Component.MAPPER);
 
-						generator.generateComponent(com.project.parser.Component.LIST);
-						generator.generateComponent(Component.FORM);
+						fileGenerator.generateComponent(com.project.parser.Component.LIST);
+						fileGenerator.generateComponent(Component.FORM);
 
-						generator.generateIndex();
+						fileGenerator.generateIndex();
 						//XMLParser.generate(tfModel.getText(), tfDest.getText());
 					}
 				}

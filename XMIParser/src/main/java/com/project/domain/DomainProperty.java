@@ -105,6 +105,10 @@ public class DomainProperty {
                 ", mappedBy='" + mappedBy + '\'' +
                 ", id=" + id +
                 ", sortBy=" + sortBy +
+                ", unique='" + unique + '\'' +
+                ", nullable='" + nullable + '\'' +
+                ", minLength='" + minLength + '\'' +
+                ", maxLength='" + maxLength + '\'' +
                 '}';
     }
 }
