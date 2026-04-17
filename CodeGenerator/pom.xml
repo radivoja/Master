@@ -8,11 +8,11 @@
 		<version>3.0.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.candy</groupId>
-	<artifactId>XMIParser</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>XMIParser</name>
-	<description>XMIParser POWERED by Spring Boot</description>
+	<groupId>com.github.radivoja</groupId>
+	<artifactId>CodeGenerator</artifactId>
+	<version>0.1.0-SNAPSHOT</version>
+	<name>CodeGenerator</name>
+	<description>Generates Spring Boot MVC applications from Papyrus UML model</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -49,10 +49,7 @@
     <version>4.0.2</version>
     <type>pom</type>
 </dependency>
-
-		
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -61,5 +58,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
