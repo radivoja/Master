@@ -105,7 +105,7 @@ public class Reader extends DefaultHandler {
             case ID -> {
                 Id id = new Id();
                 id.setGenerated(attributes.getValue(GENERATED));
-                id.setGenerationStrategy(attributes.getValue(GENERATION_STRATEGY));
+                id.setStrategy(attributes.getValue(GENERATION_STRATEGY));
                 stereotype = id;
             }
 
@@ -127,7 +127,11 @@ public class Reader extends DefaultHandler {
 
             case SORT_BY -> {
                 SortBy sortBy = new SortBy();
-                sortBy.setSortDirection(attributes.getValue(GENERATION_STRATEGY));
+                if(attributes.getValue(SORT_DIRECTION) == null){
+                    sortBy.setDirection(attributes.getValue("ASC"));
+                } else {
+                    sortBy.setDirection(attributes.getValue(SORT_DIRECTION));
+                }
                 stereotype = sortBy;
             }
 

@@ -1,20 +1,31 @@
 package com.project.stereotype;
 
 public class SortBy extends Stereotype {
-    private String sortDirection;
+    private String propertyName;
 
-    public String getSortDirection() {
-        return sortDirection;
+    private String direction;
+
+    public String getPropertyName() {
+        return propertyName;
     }
 
-    public void setSortDirection(String sortDirection) {
-        this.sortDirection = sortDirection;
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
     @Override
     public String toString() {
         return "SortBy{" +
-                "sortDirection='" + sortDirection + '\'' +
+                "propertyName='" + propertyName + '\'' +
+                ", direction='" + direction + '\'' +
                 '}';
     }
 }

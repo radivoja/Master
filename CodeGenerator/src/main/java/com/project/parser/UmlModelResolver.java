@@ -24,10 +24,10 @@ public class UmlModelResolver {
     }
 
     public Map<String, DomainClass> prepareDomainModel(){
+        sortAssociation(reader.getUmlClasses());
         Map<String, DomainClass> domainModel = mapUmlToDomain(reader.getUmlClasses());
         attachStereotypesToProperties(domainModel);
         applyClassStereotypes(domainModel);
-        sortAssociation(reader.getUmlClasses());
         return domainModel;
     }
 
@@ -121,8 +121,8 @@ public class UmlModelResolver {
                 if(stereotype instanceof Id id) {
                     domainClass.getProperties().get(stereotype.getBaseXmiId()).setId(id);
                 } else if (stereotype instanceof SortBy sortBy) {
-
-                    domainClass.getProperties().get(stereotype.getBaseXmiId()).setSortBy(sortBy);
+                    domainClass.setSortBy(sortBy);
+                    sortBy.setPropertyName(domainClass.getProperties().get(sortBy.getBaseXmiId()).getName());
                 } else if (stereotype instanceof MVCProperty mvcProperty) {
                     domainClass.getProperties().get(stereotype.getBaseXmiId()).setUnique(mvcProperty.getUnique());
                     domainClass.getProperties().get(stereotype.getBaseXmiId()).setMinLength(mvcProperty.getMinLength());

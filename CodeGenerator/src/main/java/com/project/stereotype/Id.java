@@ -2,7 +2,7 @@ package com.project.stereotype;
 
 public class Id extends Stereotype {
     private String generated;
-    private String generationStrategy;
+    private String strategy;
 
     public String getGenerated() {
         return generated;
@@ -12,12 +12,12 @@ public class Id extends Stereotype {
         this.generated = generated;
     }
 
-    public String getGenerationStrategy() {
-        return generationStrategy;
+    public String getStrategy() {
+        return strategy;
     }
 
-    public void setGenerationStrategy(String generationStrategy) {
-        this.generationStrategy = generationStrategy;
+    public void setStrategy(String strategy) {
+        this.strategy = strategy;
     }
 
 
@@ -25,7 +25,7 @@ public class Id extends Stereotype {
     public String toString() {
         return "Id{" +
                 "generated='" + generated + '\'' +
-                ", generationStrategy='" + generationStrategy + '\'' +
+                ", generationStrategy='" + strategy + '\'' +
                 '}';
     }
 }

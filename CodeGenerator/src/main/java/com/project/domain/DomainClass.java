@@ -2,6 +2,7 @@ package com.project.domain;
 
 import com.project.stereotype.FormView;
 import com.project.stereotype.ListView;
+import com.project.stereotype.SortBy;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -12,6 +13,15 @@ public class DomainClass {
     private Map<String, DomainProperty> properties = new LinkedHashMap<>();
     private ListView listView;
     private FormView formView;
+    private SortBy sortBy;
+
+    public SortBy getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(SortBy sortBy) {
+        this.sortBy = sortBy;
+    }
 
     public FormView getFormView() {
         return formView;

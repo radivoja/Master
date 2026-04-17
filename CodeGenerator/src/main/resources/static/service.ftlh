@@ -22,13 +22,8 @@ public class [=model.name?cap_first]Service {
         this.[=model.name]Mapper = [=model.name]Mapper;
     }
 
-    public List<[=model.name?cap_first]Dao> get[=model.name?cap_first]List() {
-        List<[=model.name?cap_first]> entities = [=model.name]Repository.findAll();
-        return [=model.name]Mapper.toDaoList(entities);
-    }
-
     public Page<[=model.name?cap_first]Dao> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNo-1, pageSize);
+        Pageable pageable = PageRequest.of(pageNo-1, pageSize[#if model.sortBy??], Sort.by(Sort.Direction.[=(model.sortBy.direction)!"ASC"],"[=model.sortBy.propertyName]")[/#if]);
         Page<[=model.name?cap_first]> entityPage = [=model.name]Repository.findAll(pageable);
         return entityPage.map(entity -> [=model.name]Mapper.toDao(entity));
     }

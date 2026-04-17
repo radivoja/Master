@@ -14,7 +14,11 @@ public class [=model.name?cap_first]Dao {
 [@printAccessor/]
     @Override
     public String toString() {
-        [#-- return [=checkToString()] --]
+    return "[=model.name]{" +
+[#list model.properties?values as property]
+        "[=property.name?uncap_first]=" + [=property.name?uncap_first][#if property?has_next] + ", " +[/#if]
+[/#list]
+        +"}";
     }
 }
 
@@ -101,23 +105,3 @@ public class [=model.name?cap_first]Dao {
 
 [/#list]
 [/#macro]
-
-[#-- Check toString --]
-[#function checkToString]
-    [#assign retValue = ""]
-    [#list model.properties?values as property]
-        [#list property.stereotypes as stereo]
-            [#if stereo.name == "MyMetaModel:ToString"]
-                [#if retValue?has_content]
-                    [#assign retValue+=" + "]
-                [/#if]
-                [#assign retValue = retValue + '"[=property.name]" + '?no_esc + property.name?uncap_first]
-            [/#if]
-        [/#list]
-     [/#list]
-     [#if retValue?has_content]
-        [#return retValue + ";"]
-     [/#if]
-
-      [#return '"'?no_esc + model.name+ ':" + '?no_esc  + model.properties[0].name?uncap_first + ";"]
-[/#function]

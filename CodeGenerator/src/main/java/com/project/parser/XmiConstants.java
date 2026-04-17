@@ -34,5 +34,6 @@ public final class XmiConstants {
     static String UPPER_VALUE = "upperValue";
     static String LOWER_VALUE = "lowerValue";
     static String HREF = "href";
+    static String SORT_DIRECTION = "sortDirection";
 
 }
