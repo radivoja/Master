@@ -22,6 +22,14 @@ public class Reader extends DefaultHandler {
     private String modelUri;
     private UmlClass umlClass;
 
+    public Map<String, UmlClass> getUmlClasses(){
+        return umlClasses;
+    }
+
+    public List<Stereotype> getStereotypes(){
+        return stereotypes;
+    }
+
     @Override
     public void startDocument() {
     }
@@ -69,8 +77,7 @@ public class Reader extends DefaultHandler {
     }
 
     public boolean isUmlClass(String qName, Attributes attributes) {
-        if (qName.equals(XMI_PACKAGED_ELEMENT)
-                && (attributes.getValue(XMI_TYPE).equals(UML_CLASS)))
+        if (qName.equals(XMI_PACKAGED_ELEMENT) && (attributes.getValue(XMI_TYPE).equals(UML_CLASS)))
         {
             return true;
         }
@@ -93,14 +100,9 @@ public class Reader extends DefaultHandler {
     }
 
     public Stereotype parseStereotype(String qName, Attributes attributes) {
-       /* Stereotype stereotype = new Stereotype();
-        stereotype.setXmiId(attributes.getValue(XMI_ID));
-        stereotype.setStereotypeName(StereotypeName.fromQName(qName));
-        */
         Stereotype stereotype;
-
-
         StereotypeName stereotypeName = StereotypeName.fromQName(qName);
+
         switch (stereotypeName) {
             case ID -> {
                 Id id = new Id();
@@ -108,49 +110,26 @@ public class Reader extends DefaultHandler {
                 id.setStrategy(attributes.getValue(GENERATION_STRATEGY));
                 stereotype = id;
             }
-
             case MVC_LIST -> {
-                ListView listView = new ListView();
+                MVCList listView = new MVCList();
                 listView.setId(attributes.getValue(XMI_ID));
                 listView.setDeleteEnabled(attributes.getValue(DELETE_ENABLED));
                 listView.setEditEnabled(attributes.getValue(EDIT_ENABLED));
-
-                if (attributes.getValue(PAGE_SIZE) != null) {
-                    listView.setPageSize(attributes.getValue(PAGE_SIZE));
-                } else {
-                    // temp fix
-                    listView.setPageSize("5");
-                }
+                listView.setPageSize(attributes.getValue(PAGE_SIZE));
                 stereotype = listView;
-                //     umlClasses.get(stereotype.getBaseXmiId()).setListView(listView);
             }
-
             case SORT_BY -> {
                 SortBy sortBy = new SortBy();
-                if(attributes.getValue(SORT_DIRECTION) == null){
-                    sortBy.setDirection(attributes.getValue("ASC"));
-                } else {
-                    sortBy.setDirection(attributes.getValue(SORT_DIRECTION));
-                }
+                sortBy.setDirection(attributes.getValue(SORT_DIRECTION));
                 stereotype = sortBy;
-            }
-
-            case ENTITY, KEY, ENTITY_PROPERTY -> {
-                stereotype = null;
-            }
-            case TO_STRING -> {
-                stereotype = null;
-            }
-            case UNIQUE -> {
-                stereotype = null;
-            }
-            case COMMON -> {
-                stereotype = null;
-
             }
             case MVC_PROPERTY -> {
                 MVCProperty mvcProperty = new MVCProperty();
                 mvcProperty.setUnique(attributes.getValue(UNIQUE));
+                mvcProperty.setMinLength(attributes.getValue(MIN_LENGTH));
+                mvcProperty.setMaxLength(attributes.getValue(MAX_LENGTH));
+                mvcProperty.setNullable(attributes.getValue(NULLABLE));
+                mvcProperty.setToString(attributes.getValue(TO_STRING));
                 stereotype = mvcProperty;
             }
 
@@ -173,24 +152,8 @@ public class Reader extends DefaultHandler {
             stereotype.setBaseXmiId(attributes.getValue(BASE_PROPERTY));
 
         }
-
         stereotype.setXmiId(attributes.getValue(XMI_ID));
         stereotype.setName(StereotypeName.fromQName(qName));
-
-
-       /*
-        if(attributes.getValue("minLength") != null){
-            stereotype.setMinLength(attributes.getValue("minLength"));
-        }
-
-        if(attributes.getValue("maxLength") != null){
-            stereotype.setMaxLength(attributes.getValue("maxLength"));
-        }
-        if(attributes.getValue("nullable") != null){
-            stereotype.setNullable(attributes.getValue("nullable"));
-        }
-
-        */
 
         System.out.println(stereotype);
 
@@ -212,25 +175,8 @@ public class Reader extends DefaultHandler {
         return property;
     }
 
-
     @Override
     public void endDocument() {
-        /*
-        try {
-            Printer.printInfo(models);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-         */
-    }
-
-
-    public Map<String, UmlClass> getUmlClasses(){
-        return umlClasses;
-    }
-
-    public List<Stereotype> getStereotypes(){
-        return stereotypes;
     }
 
 }

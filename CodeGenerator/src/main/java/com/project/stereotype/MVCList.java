@@ -1,18 +1,10 @@
 package com.project.stereotype;
 
-public class ListView  extends Stereotype {
+public class MVCList extends Stereotype {
     private String id;
     private String pageSize;
     private String deleteEnabled;
     private String editEnabled;
-    private String sortEnabled;
-
-    public String getSortEnabled() {
-        return sortEnabled;
-    }
-    public void setSortEnabled(String sortEnabled) {
-        this.sortEnabled = sortEnabled;
-    }
 
     public String getId() {
         return id;
@@ -40,7 +32,6 @@ public class ListView  extends Stereotype {
         this.editEnabled = editEnabled;
     }
 
-
     @Override
     public String toString() {
         return "ListView{" +
@@ -48,7 +39,6 @@ public class ListView  extends Stereotype {
                 ", pageSize='" + pageSize + '\'' +
                 ", deleteEnabled=" + deleteEnabled +
                 ", editEnabled=" + editEnabled +
-                ", sortDirection='" + sortEnabled + '\'' +
                 '}';
     }
 }

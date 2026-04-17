@@ -1,7 +1,6 @@
 package com.project.domain;
 
 import com.project.stereotype.Id;
-import com.project.stereotype.SortBy;
 
 public class DomainProperty {
     private String name;
@@ -9,7 +8,6 @@ public class DomainProperty {
     private String relationship;
     private String mappedBy;
     private Id id;
-    private SortBy sortBy;
     private String unique;
     private String nullable;
     private String minLength;
@@ -63,7 +61,6 @@ public class DomainProperty {
         this.type = type;
     }
 
-
     public String getRelationship() {
         return relationship;
     }
@@ -88,13 +85,6 @@ public class DomainProperty {
         this.id = id;
     }
 
-    public SortBy getSortBy() {
-        return sortBy;
-    }
-
-    public void setSortBy(SortBy sortBy) {
-        this.sortBy = sortBy;
-    }
 
     @Override
     public String toString() {
@@ -104,7 +94,6 @@ public class DomainProperty {
                 ", relationship='" + relationship + '\'' +
                 ", mappedBy='" + mappedBy + '\'' +
                 ", id=" + id +
-                ", sortBy=" + sortBy +
                 ", unique='" + unique + '\'' +
                 ", nullable='" + nullable + '\'' +
                 ", minLength='" + minLength + '\'' +

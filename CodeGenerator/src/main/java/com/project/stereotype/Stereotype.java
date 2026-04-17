@@ -6,11 +6,7 @@ public class Stereotype {
     private String xmiId;
     private String baseXmiId;
     private boolean isClass;
-    private String minLength;
-    private String maxLength;
-    private String nullable;
     private StereotypeName name;
-
 
     public boolean isClass() {
         return isClass;
@@ -36,6 +32,7 @@ public class Stereotype {
     public String getBaseXmiId() {
         return baseXmiId;
     }
+
     public void setBaseXmiId(String baseXmiId) {
         this.baseXmiId = baseXmiId;
     }
@@ -46,35 +43,6 @@ public class Stereotype {
                 "xmi:id='" + xmiId + '\'' +
                 ", name='" + name + '\'' +
                 ", base='" + baseXmiId + '\'' +
-                ", minLength='" + minLength + '\'' +
-                ", maxLength='" + maxLength + '\'' +
-                ", nullable='" + nullable + '\'' +
                 '}';
     }
-
-
-    public String getMinLength() {
-        return minLength;
-    }
-
-    public void setMinLength(String minLength) {
-        this.minLength = minLength;
-    }
-
-    public String getMaxLength() {
-        return maxLength;
-    }
-
-    public void setMaxLength(String maxLength) {
-        this.maxLength = maxLength;
-    }
-
-    public String getNullable() {
-        return nullable;
-    }
-
-    public void setNullable(String nullable) {
-        this.nullable = nullable;
-    }
-
 }

@@ -1,12 +1,6 @@
 package com.project.parser;
 
 public enum StereotypeName {
-    ENTITY("Entity"),
-    KEY("Key"),
-    ENTITY_PROPERTY("EntityProperty"),
-    TO_STRING("ToString"),
-    UNIQUE("Unique"),
-    COMMON("Common"),
     MVC_PROPERTY("MVCProperty"),
     ID("Id"),
     MVC_LIST("MVCList"),

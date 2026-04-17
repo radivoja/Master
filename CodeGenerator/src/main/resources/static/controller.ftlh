@@ -44,7 +44,7 @@ public class [=model.name?cap_first]Controller {
 
 	// 1. Get
 	@GetMapping("/[=model.name]List")
-	public String get[=model.name?cap_first]List(Model model, @RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "[#if model.listView??][=model.listView.pageSize][/#if]") int pageSize) {
+	public String get[=model.name?cap_first]List(Model model, @RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "[#if model.listView??][=(model.listView.pageSize)!"5"][/#if]") int pageSize) {
 	    Page<[=model.name?cap_first]Dao> [=model.name]List = [=model.name]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("pageSize", pageSize);

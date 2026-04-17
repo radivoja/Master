@@ -4,21 +4,11 @@ public class UmlProperty {
     private String xmiId;
     private String name;
     private String type;
-    private String umlClassId;
     private String association;
     private String lowerValue;
     private String upperValue;
     private String relationship;
 	private String mappedBy;
-
-    public String getUmlClassId() {
-        return umlClassId;
-    }
-
-    public void setUmlClassId(String umlClassId) {
-        this.umlClassId = umlClassId;
-    }
-
 
     public String getMappedBy() {
 		return mappedBy;
@@ -76,7 +66,6 @@ public class UmlProperty {
                 "xmiId='" + xmiId + '\'' +
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", umlClassId='" + umlClassId + '\'' +
                 ", association='" + association + '\'' +
                 ", lowerValue='" + lowerValue + '\'' +
                 ", upperValue='" + upperValue + '\'' +

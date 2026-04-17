@@ -1,7 +1,7 @@
 package com.project.domain;
 
-import com.project.stereotype.FormView;
-import com.project.stereotype.ListView;
+import com.project.stereotype.MVCList;
+import com.project.stereotype.MVCForm;
 import com.project.stereotype.SortBy;
 
 import java.util.LinkedHashMap;
@@ -11,8 +11,8 @@ public class DomainClass {
     private String name;
     private String uri;
     private Map<String, DomainProperty> properties = new LinkedHashMap<>();
-    private ListView listView;
-    private FormView formView;
+    private MVCList listView;
+    private MVCForm formView;
     private SortBy sortBy;
 
     public SortBy getSortBy() {
@@ -23,11 +23,11 @@ public class DomainClass {
         this.sortBy = sortBy;
     }
 
-    public FormView getFormView() {
+    public MVCForm getFormView() {
         return formView;
     }
 
-    public void setFormView(FormView formView) {
+    public void setFormView(MVCForm formView) {
         this.formView = formView;
     }
 
@@ -56,11 +56,11 @@ public class DomainClass {
         this.properties = properties;
     }
 
-    public ListView getListView() {
+    public MVCList getListView() {
         return listView;
     }
 
-    public void setListView(ListView listView) {
+    public void setListView(MVCList listView) {
         this.listView = listView;
     }
 

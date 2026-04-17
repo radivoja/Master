@@ -104,9 +104,9 @@ public class UmlModelResolver {
         for (Stereotype stereotype : reader.getStereotypes()) {
             if(!stereotype.isClass())
                 continue;
-            if (stereotype instanceof ListView listView) {
+            if (stereotype instanceof MVCList listView) {
                 model.get(stereotype.getBaseXmiId()).setListView(listView);
-            } else if (stereotype instanceof FormView formView) {
+            } else if (stereotype instanceof MVCForm formView) {
                 model.get(stereotype.getBaseXmiId()).setFormView(formView);
             }
         }

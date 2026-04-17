@@ -35,5 +35,13 @@ public final class XmiConstants {
     static String LOWER_VALUE = "lowerValue";
     static String HREF = "href";
     static String SORT_DIRECTION = "sortDirection";
+    static String NULLABLE = "nullable";
+    static String MIN_LENGTH = "minLength";
+    static String MAX_LENGTH = "maxLength";
+    static String TO_STRING = "toString";
+
+
+
+
 
 }
