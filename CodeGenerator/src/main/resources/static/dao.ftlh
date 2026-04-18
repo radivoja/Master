@@ -28,9 +28,9 @@ public class [=model.name?cap_first]Dao {
 
     [#if property.relationship??]
     [#if property.relationship == "ManyToOne"]
-    private Integer [=property.name?uncap_first]Id;
+    private Integer [=property.name?uncap_first];
     [#else]
-    private List<Integer> [=property.name?uncap_first]Ids;
+    private List<Integer> [=property.name?uncap_first];
     [/#if]
     [#else]
     private [=property.type] [=property.name?uncap_first];
@@ -80,18 +80,18 @@ public class [=model.name?cap_first]Dao {
 [#list model.properties?values as property]
     [#if property.relationship??]
     [#if property.relationship == "ManyToOne"]
-    public Integer get[=property.name?cap_first?replace(" ","")]Id(){
-       return [=property.name?uncap_first]Id;
+    public Integer get[=property.name?cap_first?replace(" ","")](){
+       return [=property.name?uncap_first];
     }
-    public void set[=property.name?cap_first]Id(Integer [=property.name?lower_case]Id){
-       this.[=property.name?uncap_first]Id = [=property.name?uncap_first]Id;
+    public void set[=property.name?cap_first](Integer [=property.name?lower_case]Id){
+       this.[=property.name?uncap_first] = [=property.name?uncap_first];
     }
     [#else]
-    public List<Integer> get[=property.name?cap_first?replace(" ","")]Ids(){
-       return [=property.name?uncap_first]Ids;
+    public List<Integer> get[=property.name?cap_first?replace(" ","")](){
+       return [=property.name?uncap_first];
     }
-    public void set[=property.name?cap_first]Ids(List<Integer> [=property.name?uncap_first]Ids){
-       this.[=property.name?uncap_first]Ids = [=property.name?uncap_first]Ids;
+    public void set[=property.name?cap_first](List<Integer> [=property.name?uncap_first]){
+       this.[=property.name?uncap_first] = [=property.name?uncap_first];
     }
     [/#if]
     [#else]

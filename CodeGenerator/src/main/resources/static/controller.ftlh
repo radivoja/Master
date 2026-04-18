@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 public class [=model.name?cap_first]Controller {
 
-	private final [=model.name?cap_first]Service [=model.name]Service;
+	private final [=model.name?cap_first]Service [=model.name?uncap_first]Service;
 [#list model.properties?values as property]
 	[#if checkManyToOne(property)]
 	private final [=property.name?cap_first]Service [=property.name]Service;
@@ -34,7 +34,7 @@ public class [=model.name?cap_first]Controller {
 [/#list]
 
 	public [=model.name?cap_first]Controller([=model.name?cap_first]Service [=model.name]Service[#list model.properties?values as property][#if checkManyToOne(property)], [=property.name?cap_first]Service [=property.name]Service[/#if][/#list]){
-		this.[=model.name]Service = [=model.name]Service;
+		this.[=model.name?uncap_first]Service = [=model.name]Service;
 [#list model.properties?values as property]
 	[#if checkManyToOne(property)]
 		this.[=property.name]Service = [=property.name]Service;
@@ -43,101 +43,101 @@ public class [=model.name?cap_first]Controller {
 	}
 
 	// 1. Get
-	@GetMapping("/[=model.name]List")
+	@GetMapping("/[=model.name?uncap_first]List")
 	public String get[=model.name?cap_first]List(Model model, @RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "[#if model.listView??][=(model.listView.pageSize)!"5"][/#if]") int pageSize) {
-	    Page<[=model.name?cap_first]Dao> [=model.name]List = [=model.name]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
+	    Page<[=model.name?cap_first]Dao> [=model.name?uncap_first]List = [=model.name?uncap_first]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("pageSize", pageSize);
 
-		model.addAttribute("[=model.name]List", [=model.name]List);
+		model.addAttribute("[=model.name?uncap_first]List", [=model.name?uncap_first]List);
 		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
 			[/#if]
 		[/#list]
-		return "[=model.name]List";
+		return "[=model.name?uncap_first]List";
 	}
 
 	public Page<[=model.name?cap_first]Dao> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
     	Pageable pageable = PageRequest.of(pageNo-1, pageSize);
-    	return [=model.name]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
+    	return [=model.name?uncap_first]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
     }
 
 	// 2.1 Prepare Form
-	@GetMapping("/[=model.name]Form")
+	@GetMapping("/[=model.name?uncap_first]Form")
     public String prepareForm(Model model) {
 		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
-		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
+		model.addAttribute("[=property.name?uncap_first]List", get[=property.name?uncap_first]ServiceList());
 			[/#if]
 		[/#list]
-		[=model.name?cap_first]Dao [=model.name] = new [=model.name?cap_first]Dao();
-		model.addAttribute("[=model.name]", [=model.name]);
-		return "[=model.name]Form";
+		[=model.name?cap_first]Dao [=model.name?uncap_first] = new [=model.name?cap_first]Dao();
+		model.addAttribute("[=model.name?uncap_first]", [=model.name?uncap_first]);
+		return "[=model.name?uncap_first]Form";
 	}
 
 	// 2.2 Post Form
-	@PostMapping("/[=model.name]Form")
-	public String formPost(Model model, @Valid @ModelAttribute("[=model.name]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult) {
+	@PostMapping("/[=model.name?uncap_first]Form")
+	public String formPost(Model model, @Valid @ModelAttribute("[=model.name?uncap_first]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult) {
 		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
-		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
+		model.addAttribute("[=property.name]List", get[=property.name?uncap_first]ServiceList());
 			[/#if]
 		[/#list]
 	    if(bindingResult.hasErrors()){
-			return "[=model.name]Form";
+			return "[=model.name?uncap_first]Form";
 		}
 
-        [=model.name]Service.save[=model.name?cap_first]([=model.name]);
-		return "redirect:/[=model.name]List";
+        [=model.name?uncap_first]Service.save[=model.name?cap_first]([=model.name]);
+		return "redirect:/[=model.name?uncap_first]List";
 	}
 
     // 3.1 Prepare Edit Form
-    @GetMapping("[=model.name]Form/{[=model.name]Id}/edit")
-    public String prepareUpdateForm(Model model, @PathVariable("[=model.name]Id") int [=model.name]Id){
-        Optional<[=model.name?cap_first]Dao> [=model.name] = [=model.name]Service.find[=model.name?cap_first]ById([=model.name]Id);
+    @GetMapping("[=model.name?uncap_first]Form/{[=model.name]Id}/edit")
+    public String prepareUpdateForm(Model model, @PathVariable("[=model.name?uncap_first]Id") int [=model.name]Id){
+        Optional<[=model.name?cap_first]Dao> [=model.name] = [=model.name?uncap_first]Service.find[=model.name?cap_first]ById([=model.name]Id);
         if([=model.name].isPresent()){
 			[#list model.properties?values as property]
 				[#if checkManyToOne(property)]
-			model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
+			model.addAttribute("[=property.name]List", get[=property.name?uncap_first]ServiceList());
 				[/#if]
 			[/#list]
             model.addAttribute("[=model.name]", [=model.name].get());
-            return "[=model.name]Form";
+            return "[=model.name?uncap_first]Form";
         }
-        return "[=model.name]List";
+        return "[=model.name?uncap_first]List";
     }
 
-/*
+
     // 3.2 Post Edit Form
-    @PostMapping("[=model.name]Form/{[=model.name]Id}/edit")
-    public String formUpdatePost(Model model, @Valid @ModelAttribute("[=model.name]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult, @PathVariable("[=model.name]Id") int [=model.name]Id){
+    @PostMapping("[=model.name?uncap_first]Form/{[=model.name]Id}/edit")
+    public String formUpdatePost(Model model, @Valid @ModelAttribute("[=model.name?uncap_first]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult, @PathVariable("[=model.name?uncap_first]Id") int [=model.name]Id){
 		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
-		model.addAttribute("[=property.name]List", get[=property.name]ServiceList());
+		model.addAttribute("[=property.name]List", get[=property.name?uncap_first]ServiceList());
 			[/#if]
 		[/#list]
         if(bindingResult.hasErrors()){
-            return "[=model.name]Form";
+            return "[=model.name?uncap_first]Form";
         }
 
         [=model.name].setId([=model.name]Id);
-        [=model.name]Service.save[=model.name?cap_first]([=model.name]);
-        return "redirect:/[=model.name]List";
+        [=model.name?uncap_first]Service.save[=model.name?cap_first]([=model.name]);
+        return "redirect:/[=model.name?uncap_first]List";
     }
-*/
+
 	// 4. Delete
 	@GetMapping("/delete[=model.name?cap_first]")
 	public String delete(@RequestParam(name="id") Optional<Integer> id){
-		id.ifPresent(integer -> [=model.name]Service.delete[=model.name?cap_first](id));
-		return "redirect:/[=model.name]List";
+		id.ifPresent(integer -> [=model.name?uncap_first]Service.delete[=model.name?cap_first](id));
+		return "redirect:/[=model.name?uncap_first]List";
 	}
 
 	[#-- ManyToOne relationships resolver --]
 	[#list model.properties?values as property]
 		[#if checkManyToOne(property)]
 	private List<[=property.name?cap_first]Dao> get[=property.name]ServiceList() {
-		return [=property.name]Service.get[=property.name?cap_first]List();
+		return [=property.name?uncap_first]Service.get[=property.name?cap_first]List();
 	}
 
 		[/#if]
