@@ -54,8 +54,10 @@ public class UmlModelResolver {
                         relatedProperty.setRelationship("OneToOne");
                     } else if (property.getUpperValue() != null && relatedProperty.getUpperValue() != null) {
                         property.setRelationship("ManyToMany");
+                        property.setType("List<" + relatedModel.getName() + ">");
                         relatedProperty.setMappedBy(relatedProperty.getName());
                         relatedProperty.setRelationship("ManyToMany");
+                        relatedProperty.setType("List<" + model.getName() + ">");
                     } else {
                         if (property.getUpperValue() != null) {
                             //Change property type field as List
