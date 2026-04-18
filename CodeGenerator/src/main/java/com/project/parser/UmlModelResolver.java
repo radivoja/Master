@@ -55,7 +55,7 @@ public class UmlModelResolver {
                     } else if (property.getUpperValue() != null && relatedProperty.getUpperValue() != null) {
                         property.setRelationship("ManyToMany");
                         property.setType("List<" + relatedModel.getName() + ">");
-                        relatedProperty.setMappedBy(relatedProperty.getName());
+                        relatedProperty.setMappedBy(relatedModel.getName());
                         relatedProperty.setRelationship("ManyToMany");
                         relatedProperty.setType("List<" + model.getName() + ">");
                     } else {
