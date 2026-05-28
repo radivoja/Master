@@ -1,16 +1,40 @@
 package [=model.uri].dao;
 import java.util.List;
 import java.util.Date;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 
 public class [=model.name?cap_first]Dao {
-[@printProperty/]
-
+[#list model.properties?values as property]
+    [#if property.relationship??]
+    [#if property.relationship == "ManyToOne"]
+    private Integer [=property.name?uncap_first];
+    [#else]
+    private List<Integer> [=property.name?uncap_first];
+    [/#if]
+    [#else]
+        [#if property.type == 'String']
+    @NotBlank
+            [#if property.maxLength?? && property.minLength??]
+    @Size(min = [=property.minLength], max = [=property.maxLength])
+            [#elseif property.maxLength??]
+    @Size(max = [=property.maxLength])
+            [#elseif property.minLength??]
+    @Size(min = [=property.minLength])
+            [/#if]
+        [/#if]
+        [#if property.type == 'Integer' || property.type == 'Long']
+            [#if property.maxLength??]
+    @Max([=property.maxLength])
+            [/#if]
+            [#if property.minLength??]
+    @Min([=property.minLength])
+            [/#if]
+        [/#if]
+    private [=property.type] [=property.name?uncap_first];
+    [/#if]
+	
+[/#list]
 [@printAccessor/]
     @Override
     public String toString() {
@@ -22,58 +46,9 @@ public class [=model.name?cap_first]Dao {
     }
 }
 
-[#macro printProperty]
-    [#list model.properties?values as property]
-   [#-- [@printValidation property=property/]  --]
 
-    [#if property.relationship??]
-    [#if property.relationship == "ManyToOne"]
-    private Integer [=property.name?uncap_first];
-    [#else]
-    private List<Integer> [=property.name?uncap_first];
-    [/#if]
-    [#else]
-    private [=property.type] [=property.name?uncap_first];
-    [/#if]
-    [/#list]
-[/#macro]
+      
 
-
-[#macro printValidation property]
-    [#list property.stereotypes?values as stereo]
-       [#if stereo.name == 'SpringBootMVCProfile:MVCProperty']
-          [#if property.type == 'String']
-    @NotBlank
-             [#if stereo.maxLength?? && stereo.minLength??]
-    @Size(min = [=stereo.minLength], max = [=stereo.maxLength])
-             [#elseif stereo.maxLength??]
-    @Size(max = [=stereo.maxLength])
-             [#elseif stereo.minLength??]
-    @Size(min = [=stereo.minLength])
-             [/#if]
-          [/#if]
-          [#if property.type == 'Integer' || property.type == 'Long']
-    @NotNull
-             [#if stereo.maxLength??]
-    @Max([=stereo.maxLength])
-             [/#if]
-             [#if stereo.minLength??]
-    @Min([=stereo.minLength])
-             [/#if]
-          [/#if]
-       [/#if]
-       [#if stereo.name == 'MyMetaModel:Key']
-    @NotNull
-       [/#if]
-       [#if stereo.name == 'MyMetaModel:Unique']
-          [#if property.type == 'String']
-    @NotBlank
-          [#else]
-    @NotNull
-          [/#if]
-       [/#if]
-    [/#list]
-[/#macro]
 
 [#-- Print getters and setters with CONSISTENT lowercase naming --]
 [#macro printAccessor]
@@ -102,6 +77,5 @@ public class [=model.name?cap_first]Dao {
        this.[=property.name?uncap_first] = [=property.name?uncap_first];
     }
     [/#if]
-
 [/#list]
 [/#macro]

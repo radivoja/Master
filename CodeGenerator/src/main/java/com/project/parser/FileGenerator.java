@@ -22,7 +22,6 @@ import static com.project.parser.XmiConstants.*;
 public class FileGenerator {
     private Loader loader = new Loader();
     private String projectRoot;
-    private Reader reader = new Reader();
     private UmlModelResolver resolver;
     private Collection<DomainClass> domainClasses;
 
@@ -41,7 +40,7 @@ public class FileGenerator {
                 continue;
             }
 
-            if(component.name().equals(Component.LIST) && domainClass.getListView() == null) {
+            if(component.name().equals(Component.LIST)  && domainClass.getListView() == null) {
                 continue;
             }
 

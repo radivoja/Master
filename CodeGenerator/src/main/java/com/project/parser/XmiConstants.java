@@ -2,8 +2,8 @@ package com.project.parser;
 
 public final class XmiConstants {
     static final String MY_META_MODEL_PROFILE = "MyMetaModel";
-    static final String MVC_SPRING_BOOT_PROFILE = "SpringBootMVCProfile";
-    static String PROFILE = MVC_SPRING_BOOT_PROFILE;
+    static final String SPRING_MVC_PROFILE = "SpringMVCProfile";
+    static String PROFILE = SPRING_MVC_PROFILE;
     static String BASE_CLASS = "base_Class";
     static String BASE_PROPERTY = "base_Property";
     static String UML_CLASS = "uml:Class";

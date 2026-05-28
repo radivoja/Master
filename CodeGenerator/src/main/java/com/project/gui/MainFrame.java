@@ -11,10 +11,10 @@ import static com.project.parser.TestConstants.*;
 public class MainFrame extends JFrame {
 
 	private static final String BUTTON_NAME = "Open";
-	private static final String MODEL_NAME = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
+	//private static final String MODEL_NAME = "D:\\WorkspacePapyrus\\Circulation\\Circulation.uml";
 
 
-	private static final String FILE_DIRECTORY = "D:\\WorkspacePapyrus\\Freehold\\Freehold.uml";
+	//private static final String FILE_DIRECTORY = "D:\\WorkspacePapyrus\\Circulation\\Circulation.uml";
 
 	private final JTextField tfDest = new JTextField(PROJECT_ROOT, 30);
 	private final JTextField tfModel =  new JTextField(CIRCULATION_UML, 30);

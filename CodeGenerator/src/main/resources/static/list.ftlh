@@ -5,14 +5,14 @@
 	</head>
 	[#-- Top header--]
 	<header class="header">
-    	<a class="dd-toggle" th:href="@{index}">Index</a>
-    	<a class="dd-toggle" th:href="@{[=model.name]Form}">[=model.name?cap_first] Form</a>
-		<a class="dd-toggle" th:href="@{[=model.name]List}">[=model.name?cap_first] List</a>
+    	<a class="dd-toggle" th:href="@{/}">Index</a>
+    	<a class="dd-toggle" th:href="@{[=model.name?uncap_first]Form}">[=model.name?cap_first] Form</a>
+		<a class="dd-toggle" th:href="@{[=model.name?uncap_first]List}">[=model.name?cap_first] List</a>
 	</header>
     <body>
 	[#-- Pageable links --]
         <span><a th:if="${pageNo > 1}" th:href="@{'?pageNo='} + ${pageNo-1} + '&pageSize=' + ${pageSize}">Previous Page</a></span>
-        <span text-align="middle"><a th:if="${[=model.name]List.number < [=model.name]List.totalPages-1}" th:href="@{'?pageNo='} + ${pageNo+1} + '&pageSize=' + ${pageSize}">Next Page</a></span>
+        <span text-align="middle"><a th:if="${[=model.name?uncap_first]List.number < [=model.name?uncap_first]List.totalPages-1}" th:href="@{'?pageNo='} + ${pageNo+1} + '&pageSize=' + ${pageSize}">Next Page</a></span>
 
         <table class="table table-striped table-bordered table-hover">
 [#-- Table header--]
@@ -34,7 +34,7 @@
 		    </thead>
 [#-- Table body--]
 		    <tbody>
-				<tr th:each="[=model.name] : ${[=model.name]List}">
+				<tr th:each="[=model.name?uncap_first] : ${[=model.name?uncap_first]List}">
 [@displayProperties model=model/]
 [#if ((model.listView.editEnabled)!"") == "true"]
 [@editLink model=model/]
@@ -55,10 +55,10 @@
 [#list model.properties?values as property]
     [#if !property.relationship??]
         [#-- Regular property: just display it --]
-        			<td th:text="${[=model.name].[=property.name?uncap_first]}"></td>
+        			<td th:text="${[=model.name?uncap_first].[=property.name?uncap_first]}"></td>
     [#elseif property.relationship == 'ManyToOne']
         [#-- ManyToOne: DAO has the ID, display as link or just the ID --]
-        			<td th:text="${[=model.name].[=property.name?uncap_first]Id}"></td>
+        			<td th:text="${[=model.name?uncap_first].[=property.name?uncap_first]}"></td>
     [#-- Skip OneToMany and ManyToMany relationships in list view --]
     [/#if]
 [/#list]
