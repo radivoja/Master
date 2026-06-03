@@ -3,12 +3,12 @@ package [=model.uri].controller;
 
 import java.util.Optional;
 
-import [=model.uri].dao.[=model.name?cap_first]Dao;
+import [=model.uri].dto.[=model.name?cap_first]Dto;
 import [=model.uri].service.[=model.name?cap_first]Service;
 [#list model.properties?values as property]
 	[#if checkManyToOne(property)]
 import [=model.uri].service.[=property.name?cap_first]Service;
-import [=model.uri].dao.[=property.name?cap_first]Dao;
+import [=model.uri].dto.[=property.name?cap_first]Dto;
 	[/#if]
 [/#list]
 import org.springframework.stereotype.Controller;
@@ -45,7 +45,7 @@ public class [=model.name?cap_first]Controller {
 	// 1. Get
 	@GetMapping("/[=model.name?uncap_first]List")
 	public String get[=model.name?cap_first]List(Model model, @RequestParam(defaultValue = "1") int pageNo, @RequestParam(defaultValue = "[=(model.listView.pageSize)!"5"]") int pageSize) {
-	    Page<[=model.name?cap_first]Dao> [=model.name?uncap_first]List = [=model.name?uncap_first]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
+	    Page<[=model.name?cap_first]Dto> [=model.name?uncap_first]List = [=model.name?uncap_first]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
         model.addAttribute("pageNo", pageNo);
         model.addAttribute("pageSize", pageSize);
 
@@ -58,7 +58,7 @@ public class [=model.name?cap_first]Controller {
 		return "[=model.name?uncap_first]List";
 	}
 
-	public Page<[=model.name?cap_first]Dao> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
+	public Page<[=model.name?cap_first]Dto> get[=model.name?cap_first]Page(int pageNo, int pageSize) {
     	Pageable pageable = PageRequest.of(pageNo-1, pageSize);
     	return [=model.name?uncap_first]Service.get[=model.name?cap_first]Page(pageNo, pageSize);
     }
@@ -71,14 +71,14 @@ public class [=model.name?cap_first]Controller {
 		model.addAttribute("[=property.name?uncap_first]List", get[=property.name?uncap_first]ServiceList());
 			[/#if]
 		[/#list]
-		[=model.name?cap_first]Dao [=model.name?uncap_first] = new [=model.name?cap_first]Dao();
+		[=model.name?cap_first]Dto [=model.name?uncap_first] = new [=model.name?cap_first]Dto();
 		model.addAttribute("[=model.name?uncap_first]", [=model.name?uncap_first]);
 		return "[=model.name?uncap_first]Form";
 	}
 
 	// 2.2 Post Form
 	@PostMapping("/[=model.name?uncap_first]Form")
-	public String formPost(Model model, @Valid @ModelAttribute("[=model.name?uncap_first]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult) {
+	public String formPost(Model model, @Valid @ModelAttribute("[=model.name?uncap_first]") [=model.name?cap_first]Dto [=model.name], BindingResult bindingResult) {
 		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name?uncap_first]ServiceList());
@@ -95,7 +95,7 @@ public class [=model.name?cap_first]Controller {
     // 3.1 Prepare Edit Form
     @GetMapping("[=model.name?uncap_first]Form/{[=model.name]Id}/edit")
     public String prepareUpdateForm(Model model, @PathVariable("[=model.name?uncap_first]Id") int [=model.name]Id){
-        Optional<[=model.name?cap_first]Dao> [=model.name] = [=model.name?uncap_first]Service.find[=model.name?cap_first]ById([=model.name]Id);
+        Optional<[=model.name?cap_first]Dto> [=model.name] = [=model.name?uncap_first]Service.find[=model.name?cap_first]ById([=model.name]Id);
         if([=model.name].isPresent()){
 			[#list model.properties?values as property]
 				[#if checkManyToOne(property)]
@@ -111,7 +111,7 @@ public class [=model.name?cap_first]Controller {
 
     // 3.2 Post Edit Form
     @PostMapping("[=model.name?uncap_first]Form/{[=model.name]Id}/edit")
-    public String formUpdatePost(Model model, @Valid @ModelAttribute("[=model.name?uncap_first]") [=model.name?cap_first]Dao [=model.name], BindingResult bindingResult, @PathVariable("[=model.name?uncap_first]Id") int [=model.name]Id){
+    public String formUpdatePost(Model model, @Valid @ModelAttribute("[=model.name?uncap_first]") [=model.name?cap_first]Dto [=model.name], BindingResult bindingResult, @PathVariable("[=model.name?uncap_first]Id") int [=model.name]Id){
 		[#list model.properties?values as property]
 			[#if checkManyToOne(property)]
 		model.addAttribute("[=property.name]List", get[=property.name?uncap_first]ServiceList());
@@ -136,7 +136,7 @@ public class [=model.name?cap_first]Controller {
 	[#-- ManyToOne relationships resolver --]
 	[#list model.properties?values as property]
 		[#if checkManyToOne(property)]
-	private List<[=property.name?cap_first]Dao> get[=property.name]ServiceList() {
+	private List<[=property.name?cap_first]Dto> get[=property.name]ServiceList() {
 		return [=property.name?uncap_first]Service.get[=property.name?cap_first]List();
 	}
 

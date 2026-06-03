@@ -2,7 +2,7 @@ package com.project.stereotype;
 
 import com.project.parser.StereotypeName;
 
-public class Stereotype {
+public abstract class Stereotype {
     private String xmiId;
     private String baseXmiId;
     private boolean isClass;

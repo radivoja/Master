@@ -6,7 +6,7 @@ public enum Component {
     CONTROLLER ("controller\\",  "Controller", ".java"),
     REPOSITORY ("repository\\",  "Repository", ".java"),
     SERVICE    ("service\\",     "Service",    ".java"),
-    DAO        ("dao\\",         "Dao",        ".java"),
+    DTO        ("dto\\",         "Dto",        ".java"),
     MAPPER     ("mapper\\",      "Mapper",     ".java"),
     LIST       ("",              "List",       ".html"),
     FORM       ("",              "Form",       ".html"),

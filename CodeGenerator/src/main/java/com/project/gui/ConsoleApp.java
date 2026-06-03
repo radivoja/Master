@@ -16,7 +16,7 @@ public class ConsoleApp {
         fileGenerator.generateComponent(Component.CONTROLLER);
         fileGenerator.generateComponent(Component.REPOSITORY);
         fileGenerator.generateComponent(Component.SERVICE);
-        fileGenerator.generateComponent(Component.DAO);
+        fileGenerator.generateComponent(Component.DTO);
         fileGenerator.generateComponent(Component.MAPPER);
 
         fileGenerator.generateComponent(Component.LIST);

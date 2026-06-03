@@ -90,7 +90,7 @@ public class MainFrame extends JFrame {
 						fileGenerator.generateComponent(com.project.parser.Component.CONTROLLER);
 						fileGenerator.generateComponent(com.project.parser.Component.REPOSITORY);
 						fileGenerator.generateComponent(com.project.parser.Component.SERVICE);
-						fileGenerator.generateComponent(com.project.parser.Component.DAO);
+						fileGenerator.generateComponent(com.project.parser.Component.DTO);
 						fileGenerator.generateComponent(com.project.parser.Component.MAPPER);
 
 						fileGenerator.generateComponent(com.project.parser.Component.LIST);

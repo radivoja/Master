@@ -1,10 +1,10 @@
-package [=model.uri].dao;
+package [=model.uri].dto;
 import java.util.List;
 import java.util.Date;
 import jakarta.validation.constraints.*;
 
 
-public class [=model.name?cap_first]Dao {
+public class [=model.name?cap_first]Dto {
 [#list model.properties?values as property]
     [#if property.relationship??]
     [#if property.relationship == "ManyToOne"]
