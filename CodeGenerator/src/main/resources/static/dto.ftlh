@@ -1,8 +1,8 @@
 package [=model.uri].dto;
 import java.util.List;
-import java.util.Date;
+import java.time.LocalDate;
 import jakarta.validation.constraints.*;
-
+import org.springframework.format.annotation.DateTimeFormat;
 
 public class [=model.name?cap_first]Dto {
 [#list model.properties?values as property]
@@ -30,6 +30,10 @@ public class [=model.name?cap_first]Dto {
             [#if property.minLength??]
     @Min([=property.minLength])
             [/#if]
+        [/#if]
+        [#if property.type == 'LocalDate']
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent
         [/#if]
     private [=property.type] [=property.name?uncap_first];
     [/#if]

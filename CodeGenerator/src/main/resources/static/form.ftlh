@@ -7,6 +7,8 @@
 	    [@idMacro/]
 	[#elseif property.relationship?? && property.relationship == 'ManyToOne']
         [@manyToOne property=property/]
+	[#elseif !property.relationship?? && property.type == 'LocalDate']
+	    [@dateField property=property/]
 	[#elseif !property.relationship??]
 	    [@normal property=property/]
 	[#-- Skip OneToMany/ManyToMany in form --]
@@ -39,7 +41,7 @@
 			</div>
 [/#macro]
 
-[#-- ManyToOne macro - now uses the ID field from DAO  --]
+[#-- ManyToOne macro - now uses the ID field from DTO  --]
 [#macro manyToOne property]
 		<div class="form-group row">
 			<label class="col-2 col-form-label">[=property.name?cap_first]:</label>
@@ -58,6 +60,16 @@
 		<div class="form-group row">
 			<label class="col-2 col-form-label">[=property.name?cap_first]:</label>
 			<input type="text" th:field="*{[=property.name?uncap_first]}"/>
+			<div style="margin-left:20px;" th:if="${#fields.hasErrors('[=property.name?uncap_first]')}" th:errors="*{[=property.name?uncap_first]}">Error</div>
+		</div>
+[/#macro]
+
+
+[#-- date macro  --]
+[#macro dateField property]
+		<div class="form-group row">
+			<label class="col-2 col-form-label">[=property.name?cap_first]:</label>
+			<input type="date" th:field="*{[=property.name?uncap_first]}"/>
 			<div style="margin-left:20px;" th:if="${#fields.hasErrors('[=property.name?uncap_first]')}" th:errors="*{[=property.name?uncap_first]}">Error</div>
 		</div>
 [/#macro]

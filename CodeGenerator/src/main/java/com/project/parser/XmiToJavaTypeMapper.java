@@ -8,7 +8,7 @@ public class XmiToJavaTypeMapper {
             "String", "String",
             "Integer", "Integer",
             "ELong", "Long",
-            "EDate", "Date",
+            "EDate", "LocalDate",
             "EDouble", "Double",
             "Double", "Double",
             "EBoolean", "Boolean",
