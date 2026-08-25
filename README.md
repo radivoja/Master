@@ -127,9 +127,8 @@ the `.ftlh` templates, injecting the domain model to produce Java and HTML files
 
 Apply these stereotypes from the **SpringMVCProfile** in Eclipse Papyrus to control generation.
 
-<p align="center">
-  <img src="docs/springmvc-profile.png" alt="SpringMVCProfile stereotypes and enumerations" width="850">
-</p>
+<img width="1329" height="662" alt="profile" src="https://github.com/user-attachments/assets/9b486bf3-3512-4c12-b2cb-c9e1086764c0" />
+
 
 `MVCForm` and `MVCList` specialize the abstract `MVCView` (which extends `Class`), while `Id`
 and `SortBy` specialize `MVCProperty` (which extends `Property`). The applied stereotypes and
